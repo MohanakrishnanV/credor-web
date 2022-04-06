@@ -1,0 +1,167 @@
+<button *ngIf="InvestorId != 0" id="accst_accountstatement" type="button" class="button-outline"
+  (click)="onAccountStatement()">Account
+  Statement</button>
+<!-- <span *ngIf="InvestorId == null" id="accst_accountstatement" class="action-icon buttonspan mb-2"
+  (click)="onAccountStatement()">
+  <span class="mr-3 spanvertical"></span>
+  <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+    <path d="M0 0h24v24H0V0z" fill="none" />
+    <path
+      d="M12 6c3.79 0 7.17 2.13 8.82 5.5C19.17 14.87 15.79 17 12 17s-7.17-2.13-8.82-5.5C4.83 8.13 8.21 6 12 6m0-2C7 4 2.73 7.11 1 11.5 2.73 15.89 7 19 12 19s9.27-3.11 11-7.5C21.27 7.11 17 4 12 4zm0 5c1.38 0 2.5 1.12 2.5 2.5S13.38 14 12 14s-2.5-1.12-2.5-2.5S10.62 9 12 9m0-2c-2.48 0-4.5 2.02-4.5 4.5S9.52 16 12 16s4.5-2.02 4.5-4.5S14.48 7 12 7z" />
+  </svg>
+</span> -->
+
+<!-- <span *ngIf="InvestorId == 0" id="accst_accountstatement" style="visibility: hidden;" class="action-icon" (click)="onAccountStatement()">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+        <path d="M0 0h24v24H0V0z" fill="none" />
+        <path
+          d="M12 6c3.79 0 7.17 2.13 8.82 5.5C19.17 14.87 15.79 17 12 17s-7.17-2.13-8.82-5.5C4.83 8.13 8.21 6 12 6m0-2C7 4 2.73 7.11 1 11.5 2.73 15.89 7 19 12 19s9.27-3.11 11-7.5C21.27 7.11 17 4 12 4zm0 5c1.38 0 2.5 1.12 2.5 2.5S13.38 14 12 14s-2.5-1.12-2.5-2.5S10.62 9 12 9m0-2c-2.48 0-4.5 2.02-4.5 4.5S9.52 16 12 16s4.5-2.02 4.5-4.5S14.48 7 12 7z" />
+      </svg>
+    </span> -->
+
+
+
+
+
+
+<div class="modal-wrapper" *ngIf="AccountStatementPopup">
+  <div class="modal" style="max-width: 1016px;">
+    <div class="modal-title pb-0">
+      <div class="company-wrapper d-flex align-items-center justify-content-between">
+        <div>
+          <h3>Account Statement</h3>
+        </div>
+        <div>
+          <button id="accst_accountstatement_x" class="button icon-only button-clear ml-2"
+            (click)="AccountStatementPopup = false">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+              <path d="M0 0h24v24H0V0z" fill="none" />
+              <path
+                d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div>
+        <div class="modal-content pt-3 align-items-center justify-content-between"
+          style="max-width: 1000px;max-height: 700px;overflow: auto;">
+          <div class="row">
+            <div class="col-md-8">
+              <div class="d-flex"> <img class="mr-3" src="../../assets/images/phoneicon.png" width="25px">
+                {{AccountStatement.credorContact.phoneNumber}}</div> <br>
+              <div class="d-flex"> <img class="mr-3" src="../../assets/images/emalicon.png" width="25px">
+                {{AccountStatement.credorContact.emailId}} </div><br>
+              <div class="d-flex"> <img class="mr-3" src="../../assets/images/linkicon.png" width="25px">
+                {{AccountStatement.credorContact.websiteUrl}} </div>
+            </div>
+
+            <div class="col-md-4 logoflex"> <img src="../../assets/images/Credor-logo.png" width="100px"></div>
+
+          </div><br>
+          <div class="accheadtxt"><strong>A C C O U N T S T A T E M E N T </strong></div>
+          <div class="py-3 accbtm">
+            <div class="row">
+              <div class="col-md-8"> <strong>{{AccountStatement.investorName | uppercase}}</strong></div>
+              <div class="col-md-4">
+                TOTAL INVESTED : <strong>{{AccountStatement.totalInvested}}</strong><br>
+                STATEMENT DATE : <strong> {{AccountStatement.statementDate | date}}</strong>
+              </div>
+            </div>
+          </div><br>
+          <div #container class="chart accountchart">
+            <highcharts-chart [Highcharts]="Highcharts" [options]="chartOptions"></highcharts-chart>
+          </div>
+          <div class="accheadtxt mt-4"><strong>INVESTMENT OVERVIEW</strong></div>
+          <div class="table-wrapper mt-2">
+            <div></div>
+            <table class="documents-table" *ngIf="AccountStatement.investmentOverviews.length > 0">
+              <thead>
+                <tr>
+                  <th scope="col">Offerings</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Investment</th>
+                  <th scope="col">Funded</th>
+                  <th scope="col">Distributions</th>
+                  <th scope="col">EM</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of AccountStatement.investmentOverviews">
+                  <td>{{item.offeringName}}</td>
+                  <td>{{item.date | date}}</td>
+                  <td>{{item.investmentAmount | currency:'USD' : 'symbol' : '1.0-0'}}</td>
+                  <td>{{item.fundedAmount | currency:'USD' : 'symbol' : '1.0-0'}}</td>
+                  <td>{{item.distributions | currency:'USD' : 'symbol' : '1.0-0'}}</td>
+                  <td>{{item.em}}</td>
+                  <td>{{item.status}}</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>Total</td>
+                  <td>{{TotalInvestedAmount | currency:'USD' : 'symbol' : '1.0-0'}}</td>
+                  <td>{{TotalFundedAmount | currency:'USD' : 'symbol' : '1.0-0'}}</td>
+                  <td>{{TotalDistributions | currency:'USD' : 'symbol' : '1.0-0'}}</td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div><br>
+          <div class="accheadtxt"><strong>DISTRIBUTION SUMMARY</strong></div>
+          <div class="table-wrapper mt-2">
+            <div></div>
+            <table class="documents-table" *ngIf="AccountStatement.distributionsSummaries.length > 0">
+              <thead>
+                <tr>
+                  <th scope="col">Offerings</th>
+                  <th scope="col">Funded</th>
+                  <th scope="col">Operating Income</th>
+                  <th scope="col">Gain on Sale</th>
+                  <th scope="col">Refinance Proceeds</th>
+                  <th scope="col">Return of Capital</th>
+                  <th scope="col">Preferred Return</th>
+                  <th scope="col">Interest</th>
+                  <th scope="col">Investment Balance</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of AccountStatement.distributionsSummaries">
+                  <td>{{item.offeringName}}</td>
+                  <td>{{item.funded | currency:'USD' : 'symbol' : '1.0-0'}}</td>
+                  <td>{{item.operatingIncome | currency:'USD' : 'symbol' : '1.0-0'}}</td>
+                  <td>{{item.gainOnSale | currency:'USD' : 'symbol' : '1.0-0'}}</td>
+                  <td>{{item.refinanceProceeds | currency:'USD' : 'symbol' : '1.0-0'}}</td>
+                  <td>{{item.returnOfCapital | currency:'USD' : 'symbol' : '1.0-0'}}</td>
+                  <td>{{item.preferredReturn | currency:'USD' : 'symbol' : '1.0-0'}}</td>
+                  <td>{{item.interest | currency:'USD' : 'symbol' : '1.0-0'}}</td>
+                  <td>{{item.investmentBalance | currency:'USD' : 'symbol' : '1.0-0'}}</td>
+                </tr>
+                <tr>
+                  <td>Total</td>
+                  <td>{{TotalDFunded | currency:'USD' : 'symbol' : '1.0-0'}}</td>
+                  <td>{{TotalOperatingIncome | currency:'USD' : 'symbol' : '1.0-0'}}</td>
+                  <td>{{TotalGainOnSale | currency:'USD' : 'symbol' : '1.0-0'}}</td>
+                  <td>{{TotalRefinanceProceeds | currency:'USD' : 'symbol' : '1.0-0'}}</td>
+                  <td>{{TotalReturnOfCapital | currency:'USD' : 'symbol' : '1.0-0'}}</td>
+                  <td>{{TotalPreferredReturn | currency:'USD' : 'symbol' : '1.0-0'}}</td>
+                  <td>{{TotalInterest | currency:'USD' : 'symbol' : '1.0-0'}}</td>
+                  <td>{{TotalInvestmentBalance | currency:'USD' : 'symbol' : '1.0-0'}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="modal-footer text-center mt-5">
+            <button id="accst_accountstatement_download" class="button-outline mr-3"
+              (click)="onDownloadStatement()">Download Statement</button>
+            <button id="accst_accountstatement_sendemail" class="button-outline" (click)="onSendEmail()">Send
+              Email</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="loader" *ngIf="Loader">
+  <div class="dot-flashing"></div>
+</div>

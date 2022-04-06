@@ -1,0 +1,117 @@
+<button id="reservation_addreservation" type="button" class="button-outline mr-2" (click)="onAddReservation()">Add
+  Reservation</button>
+<!------------------------------------Add New Reservation Modal for Reservation Details--------------------->
+<div class="modal-wrapper" *ngIf="addNewReservationShow">
+  <div class="modal" style="max-width: 1000px;">
+    <div class="modal-title pb-0">
+      <div class="company-wrapper d-flex align-items-center justify-content-between">
+        <div>
+          <h3>{{ModalName}} Reservation</h3>
+        </div>
+        <div>
+          <button id="reservation_addnewresere_x" class="button icon-only button-clear ml-2"
+            (click)="addNewReservationShow = false">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+              <path d="M0 0h24v24H0V0z" fill="none" />
+              <path
+                d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="modal-content pt-0">
+        <form [formGroup]="AddNewReservationForm">
+          <div class="row mt-3">
+            <div class="col">
+              <label for="reservation" class="">Reservation Name</label>
+              <select class="input-field" name="" id="reservation_addnewresere_reservationname"
+                formControlName="NewReservationName" [(ngModel)]="ReservationListId"
+                (change)="onChooseReservationName($event)">
+                <option *ngFor="let item of ReservationList" [value]="item.id"
+                  [selected]="item.id == ReservationListId">
+                  {{item.name}}
+                </option>
+              </select>
+              <div *ngIf="(submitted && NR.NewReservationName?.errors) || InvestError" class="validation-msg">
+                <span *ngIf="NR.NewReservationName.errors?.required || InvestError">Reservation is required</span>
+              </div>
+            </div>
+            <div class="col">
+              <label for="User" class="">User</label>
+              <select class="input-field" id="reservation_addnewresere_user" name="userType"
+                formControlName="ReservationUser" [(ngModel)]="ReservationUserId"
+                (change)="onchangeReservationUser($event,ReservationUserId)">
+                <option *ngFor="let item of UserTypeList" [value]="item.id" [selected]="item.id == ReservationUserId">
+                  {{ item.fullName }}
+                </option>
+              </select>
+              <div *ngIf="(submitted && NR.ReservationUser?.errors) || ReservationUserError" class="validation-msg">
+                <span *ngIf="NR.ReservationUser.errors?.required || ReservationUserError">User is required</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col">
+              <label for="profile" class="">Profile Type</label>
+              <select class="input-field" id="reservation_addnewresere_profiletype" name="profileType"
+                (change)="onchangeProfileType($event)" formControlName="ReservationProfileType"
+                [(ngModel)]="ReservationProfileId">
+                <option *ngFor="let item of profileList" [value]="item.id" [selected]="item.id == ReservationProfileId">
+                  {{ item.name }}
+                </option>
+              </select>
+              <div *ngIf="(submitted && NR.ReservationProfileType?.errors) || ReservationProfileError"
+                class="validation-msg">
+                <span *ngIf="NR.ReservationProfileType.errors?.required || ReservationProfileError">Profile is
+                  required</span>
+              </div>
+            </div>
+
+            <div class="col">
+              <label for="investmentAmount" class="">Amount</label>
+              <input type="investmentAmount" class="input-field" placeholder="Enter Amount"
+                id="reservation_addnewresere_amount" formControlName="ReservationAmount"
+                (blur)="onReservationAmount($event)" (keypress)="numberValidation($event)">
+              <div
+                *ngIf="(submitted && NR.ReservationAmount?.errors) || (ReservationAmountZeroError || ReservationAmountError)"
+                class="validation-msg">
+                <span *ngIf="ReservationAmountError || NR.ReservationAmount.errors?.required">Invested Amount is
+                  required</span>
+                <span *ngIf="ReservationAmountZeroError">Invested Amount Cannot be Zero</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col">
+              <label for="status" class="">Select Confidence Level</label>
+              <select class="input-field" id="reservation_addnewresere_sltconlevel" name="statusType"
+                (change)="onchangeReservationLevel($event)" formControlName="ReservationLevel"
+                [(ngModel)]="ReservationLevelId">
+                <option *ngFor="let item of ConfidenceLevelList" [value]="item.id"
+                  [selected]="item.id == ReservationLevelId">
+                  {{ item.value }}
+                </option>
+              </select>
+              <div *ngIf="(submitted && NR.ReservationLevel?.errors) || ReservationLevelError" class="validation-msg">
+                <span *ngIf="NR.ReservationLevel.errors?.required || ReservationLevelError">Confidence Level is
+                  required</span>
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="modal-footer">
+            <button id="reservation_addnewresere_cancel" class="button mr-3"
+              (click)="addNewReservationShow = false">Cancel</button>
+            <button *ngIf="ModalName == 'Add'" id="reservation_addnewresere_save" class="button-outline" (click)="onSubmitNewReservationForm('Add')">Save</button>
+            <button *ngIf="ModalName == 'Edit'" id="reservation_addnewresere_update" class="button-outline" (click)="onSubmitNewReservationForm('Update')">Update</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="loader" *ngIf="Loader">
+  <div class="dot-flashing"></div>
+</div>

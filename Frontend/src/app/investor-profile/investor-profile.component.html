@@ -1,0 +1,162 @@
+<!-- Header Start -->
+<!-- <app-header></app-header> -->
+<!-- Header End -->
+
+
+  <!-- Sidebar Start -->
+  <!-- <app-side-bar></app-side-bar> -->
+  <!-- Sidebar End -->
+  <div class="" *ngIf="ProfileValue != null">
+    <div class="sub-header d-flex align-items-center justify-content-between pb-2">
+      <h3>Investment Profiles</h3>
+      <div class="">
+        <!-- <button *ngIf="ProfileShow" class="button-outline mr-3" (click)="onNewProfile()">Add New Profile</button> -->
+        <app-add-profile id="investorprofile_addprofile" *ngIf="ProfileShow" (messageEvent)="receiveMessage($event)" [ProfileValue]="Profile"></app-add-profile>
+        <!-- <button id="investorprofile_addbankaccount" *ngIf="BankaccountShow" class="button-outline mr-3" (click)="onBankAccount()">Add Bank
+          Account</button> -->
+          <app-add-bankaccount id="investorprofile_addbankaccount" *ngIf="BankaccountShow" (messageEvent)="BankReturnData($event)" [BankValue]="Bank"></app-add-bankaccount>
+      </div>
+    </div>
+    <div class="header-nav tab-menu pl-0 mb-4 mt-4 d-flex align-items-center justify-content-between">
+      <div class="nav-right">
+        <ul class="d-flex pl-0">
+          <li id="investorprofile_profiles" class="nav-link active" [ngClass]="{active: Selected == 'Profile'}" (click)="selectProfile()">Profiles
+          </li>
+          <li id="investorprofile_bankaccounts" class="nav-link active" [ngClass]="{active: Selected == 'BankAccount'}" (click)="selectBankaccount()">
+            Bank Accounts</li>
+        </ul>
+      </div>
+    </div>
+    <div *ngIf="ProfileShow">
+      <div class="table-wrapper mt-4">
+        <div *ngIf="ProfileValue.length <= 0">No Profile Yet...</div>
+        <table class="documents-table" *ngIf="ProfileValue.length > 0">
+          <thead>
+            <tr>
+              <th scope="col">Profile Name</th>
+              <th scope="col">Profile Id</th>
+              <th scope="col"> Profile Type</th>
+              <th scope="col">Investments</th>
+              <th scope="col"> Address</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of ProfileValue">
+              <td *ngIf="item.name != null">{{item.name}}</td>
+              <td *ngIf="item.firstName != null">{{item.firstName}} {{item.lastName}}</td>
+              <td *ngIf="item.trustName != null">{{item.trustName}}</td>
+              <td *ngIf="item.retirementPlanName != null">{{item.retirementPlanName}}</td>
+              <td>{{item.profileDisplayId}}</td>
+              <td>{{item.typeName}}</td>
+              <td>{{item.TotalAmount| currency:'USD' : 'symbol' : '1.0-0'}} ({{item.Length}})</td>
+              <td>{{item.streetAddress1}}</td>
+              <td>
+                <span id="investorprofile_profileview_{{item.id}}" class="action-icon" (click)="onProfileEdit(item,'view')">
+                  <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                    <path d="M0 0h24v24H0V0z" fill="none" />
+                    <path
+                      d="M12 6c3.79 0 7.17 2.13 8.82 5.5C19.17 14.87 15.79 17 12 17s-7.17-2.13-8.82-5.5C4.83 8.13 8.21 6 12 6m0-2C7 4 2.73 7.11 1 11.5 2.73 15.89 7 19 12 19s9.27-3.11 11-7.5C21.27 7.11 17 4 12 4zm0 5c1.38 0 2.5 1.12 2.5 2.5S13.38 14 12 14s-2.5-1.12-2.5-2.5S10.62 9 12 9m0-2c-2.48 0-4.5 2.02-4.5 4.5S9.52 16 12 16s4.5-2.02 4.5-4.5S14.48 7 12 7z" />
+                  </svg>
+                </span>
+
+                <span id="investorprofile_profileedit_{{item.id}}" class="action-icon" (click)="onProfileEdit(item,'edit')">
+                  <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="#03260A">
+                    <path d="M0 0h24v24H0V0z" fill="none" />
+                    <path
+                      d="M14.06 9.02l.92.92L5.92 19H5v-.92l9.06-9.06M17.66 3c-.25 0-.51.1-.7.29l-1.83 1.83 3.75 3.75 1.83-1.83c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29zm-3.6 3.19L3 17.25V21h3.75L17.81 9.94l-3.75-3.75z" />
+                  </svg>
+                </span>
+                <span id="investorprofile_profiledelete_{{item.id}}" class="action-icon" (click)="onProfileDelete(item)" *ngIf="item.isOwner == false">
+                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
+                    <path d="M0 0h24v24H0V0z" fill="none" />
+                    <path
+                      d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-3.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z" />
+                  </svg>
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div *ngIf="BankaccountShow">
+      <div class="table-wrapper mt-4">
+        <table class="documents-table">
+          <thead>
+            <tr>
+              <th scope="col">Bank Name</th>
+              <th scope="col">Account Number </th>
+              <th scope="col">Account Type</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of BankDetails">
+              <td>{{item.bankName}}</td>
+              <td>{{item.accountNumber}}</td>
+              <td>{{item.accountTypeName}}</td>
+              <td>
+                <span id="investorprofile_bankedit_{{item.id}}" class="action-icon" (click)="onBankEdit(item)">
+                  <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="#03260A">
+                    <path d="M0 0h24v24H0V0z" fill="none" />
+                    <path
+                      d="M14.06 9.02l.92.92L5.92 19H5v-.92l9.06-9.06M17.66 3c-.25 0-.51.1-.7.29l-1.83 1.83 3.75 3.75 1.83-1.83c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29zm-3.6 3.19L3 17.25V21h3.75L17.81 9.94l-3.75-3.75z" />
+                  </svg>
+                </span>
+                <span id="investorprofile_bankdelete_{{item.id}}" class="action-icon" (click)="onBankDelete(item)">
+                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
+                    <path d="M0 0h24v24H0V0z" fill="none" />
+                    <path
+                      d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-3.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z" />
+                  </svg>
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!--Popup-->
+
+  <div class="modal-wrapper" *ngIf="DeletePopup">
+    <div class="modal">
+      <div class="modal-title">
+        <h2>Delete Profile</h2>
+      </div>
+      <div class="modal-content pt-0">
+        Are you sure you want to delete Profile?
+      </div>
+      <div class="modal-footer">
+        <button id="investorprofile_dp_yes" class="button-outline mr-3" (click)="onDeleteProfileConfirmation()"> Yes</button>
+        <button id="investorprofile_dp_no" type="button" class="button" (click)="DeletePopup=false">
+          <span>No</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="modal-wrapper" *ngIf="DeleteBankPopup">
+    <div class="modal">
+      <div class="modal-title">
+        <h2>Delete Bank Account</h2>
+      </div>
+      <div class="modal-content" style="max-height: 400px;overflow:auto;">
+        Are you sure you want to delete this bank account?
+      </div>
+      <div class="modal-footer">
+        <button id="investorprofile_dbp_yes" class="button-outline mr-3" (click)="onDeleteBankConfirmation()">
+          Yes
+        </button>
+        <button id="investorprofile_dbp_no" type="button" class="button" (click)="DeleteBankPopup=false">
+          <span>No</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+<div class="loader" *ngIf="Loader">
+  <div class="dot-flashing"></div>
+</div>

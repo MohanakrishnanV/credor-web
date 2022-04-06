@@ -1,0 +1,134 @@
+<button id="investment_addInvestment" type="button" class="button-outline mr-2" (click)="onAddInvestment()">Add Investment</button>
+
+<div class="modal-wrapper" *ngIf="addInvestmentShow">
+  <div class="modal" style="max-width: 1000px;">
+    <div class="modal-title pb-0">
+      <div class="company-wrapper d-flex align-items-center justify-content-between">
+        <div>
+          <h3>{{ModalName}} Investment</h3>
+        </div>
+        <div>
+          <button id="investment_addInvestmentshow_x" class="button icon-only button-clear ml-2" (click)="addInvestmentShow = false">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+              <path d="M0 0h24v24H0V0z" fill="none" />
+              <path
+                d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="modal-content pt-0">
+        <form [formGroup]="AddInvestmentForm">
+          <div class="row mt-3">
+            <div class="col">
+              <label for="offering" class="">Offering Name</label>
+              <select class="input-field" name="" id="investment_addInvestmentshow_aif_offeringname"
+                formControlName="NewReservationName" [(ngModel)]="OfferingId"
+                (change)="onChooseReservationName()">
+                <option *ngFor="let item of DropdownOffering" [value]="item.id"
+                  [selected]="item.id == OfferingId">
+                  {{item.name}}
+                </option>
+              </select>
+              <div *ngIf="OfferingNameError" class="validation-msg">Offering Name is required</div>
+            </div>
+            <div class="col">
+              <label for="User" class="">User</label>
+              <select class="input-field" id="investment_addInvestmentshow_aif_user" name="userType"
+                formControlName="InvestmentUser" [(ngModel)]="InvestmentUserId"
+                (change)="onChooseUser()">
+                <option *ngFor="let item of UserTypeList" [value]="item.id" [selected]="item.id == InvestmentUserId">
+                  {{ item.fullName }}
+                </option>
+              </select>
+              <div *ngIf="UserError" class="validation-msg">User is required</div>
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col">
+              <label for="investmentAmount" class="">Investment Amount</label>
+              <input type="investmentAmount" class="input-field" placeholder="Enter Amount" id="investment_addInvestmentshow_aif_investmentamount"
+                formControlName="InvestmentAmount" (blur)="onMinimumInvestment()"
+                (keypress)="numberValidation($event)">
+                <div *ngIf="InvestmentAmountError" class="validation-msg">Investment Amount is required</div>
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col">
+              <label for="profile" class="">Profile Type</label>
+              <select class="input-field" id="investment_addInvestmentshow_aif_profiletype" name="profileType" (change)="onchangeProfileType()"
+                formControlName="InvestmentProfileType" [(ngModel)]="InvestmentProfileId">
+                <option *ngFor="let item of profileList" [value]="item.id"
+                  [selected]="item.id == InvestmentProfileId">
+                  {{ item.name }}
+                </option>
+              </select>
+              <div *ngIf="ProfileTypeError" class="validation-msg">Profile Type is required</div>
+            </div>
+            <div class="col">
+              <label for="status" class="">Status</label>
+              <select class="input-field" id="investment_addInvestmentshow_aif_status" name="statusType" (change)="onchangeStatus()"
+                formControlName="InvestmentStatus" [(ngModel)]="InvestmentStatusId">
+                <option *ngFor="let item of statusList" [value]="item.id" [selected]="item.id == InvestmentStatusId">
+                  {{ item.name }}
+                </option>
+              </select>
+              <div *ngIf="StatusError" class="validation-msg">Status is required</div>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col">
+              <label for="profile" class="">Fund Rec'd</label>
+              <input type="date" class="input-field" id="investment_addInvestmentshow_aif_funcrecd" formControlName="InvestmentFundReceived" (change)="onchangeFundRecd()">
+              <div *ngIf="FundReceivedError" class="validation-msg">Fund Rec'd is required</div>
+            </div>
+            <div class="col">
+              <label for="status" class="">Docs Signed</label>
+              <input type="date" class="input-field" id="investment_addInvestmentshow_aif_docssigned" formControlName="InvestmentDocsSigned" (change)="onchangeDocsSign()">
+              <div *ngIf="DocsSignedError" class="validation-msg">Docs Signed is required</div>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-md-12">
+              <div id="investment_addInvestmentshow_aif_drag" class="dropzone" appDrag (files)="onFileSelectDrag($event)">
+                <button *ngIf="DocumentPath != null" class="pdfbtn"><img src="../../assets/images/icons/pdf.svg"
+                    class="pdficon"></button>
+                <div class="text-wrapper">
+                  <div class="centered">
+                    <input id="investment_addInvestmentshow_aif_drag" type="file" class="sr-only" name="file" id="file" (change)="onFilesSelect($event)">
+                    <label for="file">Drag & drop files here or click to select files</label>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="FileUploadError" class="validation-msg">Please upload a file</div>
+            </div>
+            <div class="row col-md-12 py-3" *ngIf="files?.length > 0">
+              <div class="col-md-12" *ngFor="let item of files; let i=index">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="docheadtxt">Document Name</div>
+                  </div>
+                  <div class="col-md-6">
+                    <div> {{item.name}}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <br>
+          <div class="modal-footer">
+            <button id="investment_addInvestmentshow_aif_cancel" class="button mr-3" (click)="addInvestmentShow = false">Cancel</button>
+            <button *ngIf="ModalName == 'Add'" id="investment_addInvestmentshow_aif_save" class="button-outline" (click)="onSubmitInvestmentForm()">Save</button>
+            <button *ngIf="ModalName == 'Edit'" id="investment_addInvestmentshow_aif_update" class="button-outline" (click)="onSubmitInvestmentForm()">Update</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="loader" *ngIf="Loader">
+  <div class="dot-flashing"></div>
+</div>

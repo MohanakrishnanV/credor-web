@@ -1,0 +1,497 @@
+<!-- Header Start -->
+<!-- <app-header></app-header> -->
+<!-- Header End -->
+
+
+  <!-- Sidebar Start -->
+  <!-- <app-side-bar></app-side-bar> -->
+  <!-- Sidebar End -->
+  <div class="">
+    <div class="sub-header d-flex align-items-center justify-content-between pb-2">
+      <div>
+        <h3>Reports</h3>
+      </div>
+    </div>
+    <!---------------------------------------Reports Tabs--------------------------->
+    <div class="documents-table ">
+      <div class="row">
+        <div class="header-nav tab-menu pl-0 d-flex align-items-center justify-content-between">
+          <div class="nav-right">
+            <ul class="d-flex pl-0">
+              <li class="nav-link active" [ngClass]="{active: Selected == 'Users'}" (click)="selectUserTab(1)">
+                Users
+              </li>
+              <li class="nav-link active" [ngClass]="{active: Selected == 'Investments'}"
+                (click)="selectInvestmentTab(2)">
+                Investments
+              </li>
+              <li class="nav-link active" [ngClass]="{active: Selected == 'Distributions'}"
+                (click)="selectDistributionTab(3)">
+                Distributions
+              </li>
+              <li class="nav-link active" [ngClass]="{active: Selected == 'Tax'}"
+                (click)="selectTaxTab(4)">
+                Tax
+              </li>
+              <li class="nav-link active" [ngClass]="{active: Selected == 'FormD'}"
+                (click)="selectFormDTab(5)">
+                Form D
+              </li>
+              <li class="nav-link active" [ngClass]="{active: Selected == 'InvestorProfileUpdates'}"
+                (click)="selectInvestorProfileTab(6)">
+                Investor Profile Updates
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!----------------------------Users , Investments and Distributions-------------------->
+
+    <div>
+      <div class="row">
+        <div class="col pl-0 pr-0">
+          <div class="table-wrapper mt-4">
+
+
+            <!----------------------------User Table----------------------->
+
+
+            <div class="col p-3 reporttabdiv" *ngIf="tabSelectId == 1">
+              <div class="row">
+                <div class="col">
+                  <label class="">Select</label>
+                  <select class="input-field" id="statusType" name="statusType" [(ngModel)]="StatusTypeId"
+                    (change)="onchangeStatusType($event)">
+                    <option *ngFor="let item of StatusList" [value]="item.id" [selected]="item.id == StatusTypeId">
+                      {{ item.value }}
+                    </option>
+                  </select>
+                </div>
+                <div class="col">
+                  <label for="profile" class="">From</label>
+                  <input type="date" class="input-field" id="fromdate" [(ngModel)]="FromDate">
+                </div>
+                <div class="col">
+                  <label for="profile" class="">To</label>
+                  <input type="date" class="input-field" id="todate" [(ngModel)]="ToDate">
+                </div>
+                <div class="col pt-3">
+
+                  <button *ngIf="(FromDate != null && FromDate != '') || (ToDate != null && ToDate != '')"
+                    (click)="SearchDate()" class="button-outline mr-2">Search</button>
+                  <button
+                    *ngIf="tabSelectId == 1 && (StatusTypeId != 0 || (FromDate != null && FromDate != '') || (ToDate != null && ToDate != ''))"
+                    (click)="selectUserTab(1)" class="button-outline">Clear Search</button>
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="col p-3 reporttabdiv" *ngIf="tabSelectId == 2 ||tabSelectId == 3 ">
+              <div class="row">
+
+                <div class="col-md-3">
+                  <label class="">Select</label>
+                  <select class="input-field" id="NameType" name="NameType" [(ngModel)]="NameTypeId"
+                    (change)="onchangeNameType($event)">
+                    <option *ngFor="let item of OfferingNameList" [value]="item.id" [selected]="item.id == NameTypeId">
+                      {{ item.name }}
+                    </option>
+                  </select>
+
+
+
+                </div>
+                <div class="col-md-3 pt-3">
+                  <button class="button-outline" *ngIf="tabSelectId == 2 && NameTypeId != 0"
+                    (click)="selectInvestmentTab(2)">Clear Search</button>
+                  <button class="button-outline" *ngIf="tabSelectId == 3 && NameTypeId != 0"
+                    (click)="selectDistributionTab(3)">Clear Search</button>
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="col p-3 reporttabdiv" *ngIf="tabSelectId == 4">
+              <div class="row">
+                <div class="col">
+                  <label for="profile" class="">From</label>
+                  <input type="date" class="input-field" id="fromdate" [(ngModel)]="TaxFromDate">
+                </div>
+                <div class="col">
+                  <label for="profile" class="">To</label>
+                  <input type="date" class="input-field" id="todate" [(ngModel)]="TaxToDate">
+                </div>
+                <div class="col">
+
+                  <div class="col">
+                    <label class="">Select Offering : </label>
+                    <select class="input-field" id="" name="" [(ngModel)]="TaxofferingId"
+                      (change)="onchangeTaxType($event)">
+                      <option *ngFor="let item of OfferingNameList" [value]="item.id" [selected]="item.id == TaxofferingId">
+                        {{ item.name }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <button *ngIf="(FromDate != null && FromDate != '') || (ToDate != null && ToDate != '')"
+                    (click)="SearchDate()" class="button-outline mr-2">Search</button>
+                  <button
+                    *ngIf="tabSelectId == 1 && (StatusTypeId != 0 || (FromDate != null && FromDate != '') || (ToDate != null && ToDate != ''))"
+                    (click)="selectUserTab(1)" class="button-outline">Clear Search</button>
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="col p-3 reporttabdiv" *ngIf="tabSelectId == 5">
+              <div class="row">
+                <div class="col-md-3 p-0">
+                  <div class="col p-0">
+                    <label class="">Select Offering : </label>
+                    <select class="input-field" id="" name="" [(ngModel)]="FormDOfferingId"
+                      (change)="onchangeFormDType($event)">
+                      <option *ngFor="let item of OfferingNameList" [value]="item.id" [selected]="item.id == FormDOfferingId">
+                        {{ item.name }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="ReportList.length == 0 && tabSelectId == 1">No Users Yet...</div>
+            <div *ngIf="ReportList.length == 0 && tabSelectId == 2">No Investment Yet...</div>
+            <div *ngIf="ReportList.length == 0 && tabSelectId == 3">No Distributions Yet...</div>
+            <div *ngIf="ReportList.length == 0 && tabSelectId == 4">No Tax Yet...</div>
+            <div *ngIf="ReportList.length == 0 && tabSelectId == 5">No Records...</div>
+
+
+
+
+
+
+
+
+
+            <div style="float: right;
+            margin-bottom: 10px;    margin-top: 25px;" *ngIf="ReportList.length > 0"><button class="button-outline"
+                (click)="ExcelTableExport()">Export as Excel</button></div>
+
+            <!----------------------------------User Table--------------------------------------->
+            <div class="reporttablediv" *ngIf="ReportList.length > 0 && tabSelectId == 1">
+              <table #tableInput class="documents-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Phone</th>
+                    <th scope="col">State</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Verified</th>
+                    <th scope="col">Self Acc</th>
+                    <th scope="col">Verified Acc</th>
+                    <th scope="col">Registered</th>
+                    <th scope="col">Sign Up Date</th>
+                    <th scope="col">Investment Capacit</th>
+                    <th scope="col">Lead Source</th>
+                    <th scope="col">Additional Users</th>
+                    <th scope="col">Notes</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of ReportList | paginate: config">
+                    <td>{{item.name ? item.name : '-'}}</td>
+                    <td>{{item.email ? item.email : '-'}}</td>
+                    <td>{{item.phone ? item.phone : '-'}}</td>
+                    <td>{{item.state ? item.state : '-'}}</td>
+                    <td>{{item.status ? item.status : '-'}}</td>
+                    <td>{{item.isVerified ? item.isVerified : '-'}}</td>
+                    <td>{{item.isSelfAccredited ? item.isSelfAccredited : '-'}}</td>
+                    <td>{{item.isSelfAccredited ? item.isSelfAccredited : '-'}}</td>
+                    <td>{{item.registered ? item.registered : '-'}}</td>
+                    <td>{{item.signUpDate != '-' ? (item.signUpDate | date: 'MMM dd, yyy') : ('-') }}
+                    </td>
+                    <td>{{item.investmentCapacity ? item.investmentCapacity : '-' }}</td>
+                    <td>{{item.leadSource ? item.leadSource : '-'}}</td>
+                    <td *ngIf="item.additionalUsers.length > 0">
+                      <div *ngFor="let user of item.additionalUsers; let isLast=last">
+                        {{user}}{{isLast ? '' : ', '}}
+                      </div>
+                    </td>
+                    <td *ngIf="item.additionalUsers.length == 0">-</td>
+                    <td *ngIf="item.notes.length > 0">
+                      <span class="action-icon" (click)="onViewNotes(item.notes)">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                          <path d="M0 0h24v24H0V0z" fill="none" />
+                          <path
+                            d="M12 6c3.79 0 7.17 2.13 8.82 5.5C19.17 14.87 15.79 17 12 17s-7.17-2.13-8.82-5.5C4.83 8.13 8.21 6 12 6m0-2C7 4 2.73 7.11 1 11.5 2.73 15.89 7 19 12 19s9.27-3.11 11-7.5C21.27 7.11 17 4 12 4zm0 5c1.38 0 2.5 1.12 2.5 2.5S13.38 14 12 14s-2.5-1.12-2.5-2.5S10.62 9 12 9m0-2c-2.48 0-4.5 2.02-4.5 4.5S9.52 16 12 16s4.5-2.02 4.5-4.5S14.48 7 12 7z" />
+                        </svg>
+                      </span>
+                    </td>
+                    <td *ngIf="item.notes.length == 0">-</td>
+                  </tr>
+                </tbody>
+              </table>
+
+            </div>
+
+            <!--------------------------------------------Investment Table------------------------------------->
+
+            <div class="reporttablediv" *ngIf="ReportList.length > 0 && tabSelectId == 2">
+              <table #tableInput class="documents-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Offering Name</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Phone</th>
+                    <th scope="col">Profile Name</th>
+                    <th scope="col">Profile Id</th>
+                    <th scope="col">Address Line 1</th>
+                    <th scope="col">Address Line 2</th>
+                    <th scope="col">City</th>
+                    <th scope="col">State</th>
+                    <th scope="col">Zip Code</th>
+                    <th scope="col">Disdegrated Entity</th>
+                    <th scope="col">IRA LLC</th>
+                    <th scope="col">Profile Tax Id</th>
+                    <th scope="col">Investment Amount</th>
+                    <th scope="col">% Funded</th>
+                    <th scope="col">% Ownership</th>
+                    <th scope="col">Signed Date</th>
+                    <th scope="col">Funded Date</th>
+                    <th scope="col">Verified</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of ReportList | paginate: config">
+                    <td>{{item.offeringName ? item.offeringName : '-'}}</td>
+                    <td>{{item.status ? item.status : '-'}}</td>
+                    <td>{{item.name ? item.name : '-'}}</td>
+                    <td>{{item.email ? item.email : '-'}}</td>
+                    <td>{{item.phone ? item.phone : '-'}}</td>
+                    <td>{{item.profileName ? item.profileName : '-'}}</td>
+                    <td>{{item.profileId ? item.profileId : '-'}}</td>
+                    <td>{{item.addressLine1 ? item.addressLine1 : '-'}}</td>
+                    <td>{{item.addressLine2 ? item.addressLine2 : '-'}}</td>
+                    <td>{{item.city ? item.city : '-'}}</td>
+                    <td>{{item.status ? item.status : '-'}}</td>
+                    <td>{{item.zipCode ? item.zipCode : '-'}}</td>
+                    <td>{{item.disregardedEntity != '-' ? item.disregardedEntity : '-'}}</td>
+                    <td>{{item.irallc != '-' ? item.irallc : '-'}}</td>
+                    <td>{{item.profileTaxId != '-' ? item.profileTaxId : '-'}}</td>
+                    <td>{{item.investmentAmount != '-' ? (item.investmentAmount | currency:'USD' : 'symbol' : '1.0-0') :
+                      '-'}}</td>
+                    <td>{{item.percentageFunded != '-' ? (item.percentageFunded) : '-'}}</td>
+                    <td>{{item.percentageOwnership != '-' ? (item.percentageOwnership) : '-'}}</td>
+                    <td>{{item.signedUpDate != '-' ? (item.signedUpDate | date: 'MMM dd, yyy') : ('-') }}
+                    </td>
+                    <td>{{item.fundedDate != '-' ? (item.fundedDate | date: 'MMM dd, yyy') : ('-') }}
+                    </td>
+                    <td>{{item.isVerified != '-' ? item.isVerified : '-'}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!--------------------------------------------Distribution Table------------------------------------->
+            <div class="reporttablediv" *ngIf="ReportList.length > 0 && tabSelectId == 3">
+              <table #tableInput class="documents-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Offering Name</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Phone</th>
+                    <th scope="col">Profile Name</th>
+                    <th scope="col">Profile Id</th>
+                    <th scope="col">Address Line 1</th>
+                    <th scope="col">Address Line 2</th>
+                    <th scope="col">City</th>
+                    <th scope="col">State</th>
+                    <th scope="col">Zip Code</th>
+                    <th scope="col">Disdegrated Entity</th>
+                    <th scope="col">IRA LLC</th>
+                    <th scope="col">Profile Tax Id</th>
+                    <th scope="col">Investment Amount</th>
+                    <th scope="col">% Funded</th>
+                    <th scope="col">% Ownership</th>
+                    <th scope="col">Signed Date</th>
+                    <th scope="col">Funded Date</th>
+                    <th scope="col">Verified</th>
+                    <th scope="col">PaymentDate</th>
+                    <th scope="col">PercentageFunded</th>
+                    <th scope="col">PercentageOwnership</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of ReportList | paginate: config">
+                    <td>{{item.offeringName ? item.offeringName : '-'}}</td>
+                    <td>{{item.status ? item.status : '-'}}</td>
+                    <td>{{item.name ? item.name : '-'}}</td>
+                    <td>{{item.email ? item.email : '-'}}</td>
+                    <td>{{item.phone ? item.phone : '-'}}</td>
+                    <td>{{item.profileName ? item.profileName : '-'}}</td>
+                    <td>{{item.profileId ? item.profileId : '-'}}</td>
+                    <td>{{item.addressLine1 ? item.addressLine1 : '-'}}</td>
+                    <td>{{item.addressLine2 ? item.addressLine2 : '-'}}</td>
+                    <td>{{item.city ? item.city : '-'}}</td>
+                    <td>{{item.status ? item.status : '-'}}</td>
+                    <td>{{item.zipCode ? item.zipCode : '-'}}</td>
+                    <td>{{item.disregardedEntity != '-' ? item.disregardedEntity : '-'}}</td>
+                    <td>{{item.irallc != '-' ? item.irallc : '-'}}</td>
+                    <td>{{item.profileTaxId != '-' ? item.profileTaxId : '-'}}</td>
+                    <td>{{item.investmentAmount != '-' ? (item.investmentAmount | currency:'USD' : 'symbol' : '1.0-0' )
+                      : '-'}}</td>
+                    <td>{{item.percentageFunded != '-' ? (item.percentageFunded) : '-'}}</td>
+                    <td>{{item.percentageOwnership != '-' ? item.percentageOwnership : '-'}}</td>
+                    <td>{{item.signedUpDate != '-' ? (item.signedUpDate | date: 'MMM dd, yyy') : ('-') }}
+                    </td>
+                    <td>{{item.fundedDate != '-' ? (item.fundedDate | date: 'MMM dd, yyy') : ('-') }}
+                    </td>
+                    <td>{{item.isVerified != '-' ? item.isVerified : '-'}}</td>
+                    <td>{{item.paymentDate != '-' ? (item.paymentDate | date: 'MMM dd, yyy') : ('-') }}
+                    </td>
+                    <td>{{item.percentageFunded ? item.percentageFunded : '0'}}</td>
+                    <td>{{item.percentageOwnership ? item.percentageOwnership : '0'}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!--------------------------------------------Tax Table------------------------------------->
+            <div class="reporttablediv" *ngIf="ReportList.length > 0 && tabSelectId == 4">
+              <table #tableInput class="documents-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Offering</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Profile Name/Type</th>
+                    <th scope="col">Disregarded Entity</th>
+                    <th scope="col">IRA LLC</th>
+                    <th scope="col">Profile Id</th>
+                    <th scope="col">Profile Tax Id</th>
+                    <th scope="col">Investment Amount</th>
+                    <th scope="col">Operating Income</th>
+                    <th scope="col">Retained Earnings</th>
+                    <th scope="col">Proceeds From Refi</th>
+                    <th scope="col">Gain From Sales</th>
+                    <th scope="col">Total Return of Capital</th>
+                    <th scope="col">Preferred Return</th>
+                    <th scope="col">Interest</th>
+                    <th scope="col">Investment Balance</th>
+                    <th scope="col">Funded Date</th>
+                    <th scope="col">% Funded</th>
+                    <th scope="col">% Ownership</th>
+                    <th scope="col">Address Line 1</th>
+                    <th scope="col">Address Line 2</th>
+                    <th scope="col">City</th>
+                    <th scope="col">State</th>
+                    <th scope="col">Zip Code</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of ReportList | paginate: config">
+                    <td>{{item.offeringName ? item.offeringName : '-'}}</td>
+                    <td>{{item.name ? item.name : '-'}}</td>
+                    <td>{{item.profileType ? item.profileType : '-'}}</td>
+                    <td>{{item.isDisregardedEntity != '-' ? item.isDisregardedEntity : '-'}}</td>
+                    <td>{{item.isIRALLC != '-' ? item.isIRALLC : '-'}}</td>
+                    <td>{{item.profileDisplayId ? item.profileDisplayId : '-'}}</td>
+                    <td>{{item.profileTaxId != '-' ? item.profileTaxId : '-'}}</td>
+                    <td>{{item.investmentAmount ? (item.investmentAmount | currency:'USD' : 'symbol' : '1.0-0') : '-'}}</td>
+                    <td>{{item.operatingIncome ? (item.operatingIncome | currency:'USD' : 'symbol' : '1.0-0') : '-'}}</td>
+                    <td>{{item.retainedEarnings ? (item.retainedEarnings | currency:'USD' : 'symbol' : '1.0-0') : '-'}}</td>
+                    <td>{{item.proceedsFromrRefi ? (item.proceedsFromrRefi | currency:'USD' : 'symbol' : '1.0-0') : '-'}}</td>
+                    <td>{{item.gainFromSales ? (item.gainFromSales | currency:'USD' : 'symbol' : '1.0-0') : '-'}}</td>
+                    <td>{{item.totalReturnOfCapital ? (item.totalReturnOfCapital | currency:'USD' : 'symbol' : '1.0-0') : '-'}}</td>
+                    <td>{{item.preferredReturn ? (item.preferredReturn | currency:'USD' : 'symbol' : '1.0-0') : '-'}}</td>
+                    <td>{{item.interest ? (item.interest | currency:'USD' : 'symbol' : '1.0-0') : '-'}}</td>
+                    <td>{{item.investmentBalance ? (item.investmentBalance | currency:'USD' : 'symbol' : '1.0-0' )
+                      : '-'}}</td>
+                    <td>{{item.fundedDate != '-' ? item.fundedDate : '-'}}</td>
+                    <td>{{item.percentageFunded  ? (item.percentageFunded | currency:'USD' : 'symbol' : '1.0-0') : '-'}}</td>
+                    <td>{{item.percentageOwnerShip ? (item.percentageOwnerShip | currency:'USD' : 'symbol' : '1.0-0') : '-'}}</td>
+                    <td>{{item.addressLine1? item.addressLine1 : '-'}}</td>
+                    <td>{{item.addressLine2 ? item.addressLine2 : '-'}}
+                    </td>
+                    <td>{{item.city != '-' ? item.city : '-'}}
+                    </td>
+                    <td>{{item.state != '-' ? item.state : '-'}}</td>
+                    <td>{{item.zipCode != '-' ? item.zipCode : '-' }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!--------------------------------------------Form D Table------------------------------------->
+            <div class="reporttablediv" *ngIf="ReportList.length > 0 && tabSelectId == 5">
+              <table #tableInput class="documents-table">
+                <thead>
+                  <tr>
+                    <th scope="col">State</th>
+                    <th scope="col"># of Investors</th>
+                    <th scope="col">Amount Funded</th>
+                    <th scope="col">Date First Fund Received</th>
+                    <th scope="col">Non-Accredited Investors</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of ReportList | paginate: config">
+                    <td>{{item.state ? item.state : '-'}}</td>
+                    <td>{{item.noOfInvestors ? item.noOfInvestors : '-'}}</td>
+                    <td>{{item.amountFunded ? (item.amountFunded | currency:'USD' : 'symbol' : '1.0-0') : '-'}}</td>
+                    <td>{{item.dateFirstFundReceived ? (item.dateFirstFundReceived | date) : '-'}}</td>
+                    <td>{{item.nonAccreditedInvestors ? item.nonAccreditedInvestors : '-'}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!--------------------------------------------Investor Profile Updates Table------------------------------------->
+            <div class="reporttablediv"></div>
+
+            <pagination-controls *ngIf="ReportList.length > 0" (pageChange)="pageChanged($event)">
+            </pagination-controls>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+<!---------------------User View Notes Popup--------------->
+<div class="modal-wrapper" *ngIf="viewNotesBtnShow">
+  <div class="modal">
+    <div class="modal-title">
+      <div class="company-wrapper d-flex align-items-center justify-content-between">
+        <div>
+          <h3>Notes</h3>
+        </div>
+        <div>
+          <button class="button icon-only button-clear ml-2" (click)="viewNotesBtnShow = false">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+              <path d="M0 0h24v24H0V0z" fill="none" />
+              <path
+                d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-content pt-0 ">
+      <div class="notestxt" *ngFor="let note of NotesList">
+        {{note}}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="loader" *ngIf="Loader">
+  <div class="dot-flashing"></div>
+</div>

@@ -1,0 +1,198 @@
+<div class="">
+    <div class="">
+        <div class="row mt-3">
+            <div class="col">
+                <label for="subject" class="">Subject<span class="validation-msg">*</span></label>
+                <input type="text" class="input-field" placeholder="Enter Subject Name" [(ngModel)]="SubjectName"
+                    (blur)="onSubjectName()">
+                <div *ngIf="subjectNameError" class="validation-msg">
+                    <span>Please enter subject name</span>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col">
+                <label for="recipients" class="">Recipients<span class="validation-msg"> *</span></label>
+                <!-- <select class="input-field" id="recipients" name="recipients" (change)="onchangeRecipients($event)"
+                    [(ngModel)]="RecipientId" multiple>
+                    <option *ngFor="let items of RecipientList" [value]="items.id" [selected]="items.id == RecipientId">
+                        {{ items.name}}
+                    </option>
+                </select> -->
+                <ng-multiselect-dropdown [placeholder]="'Select group or individual'" [settings]="dropdownSettings" 
+                    [data]="RecipientList" [(ngModel)]="RecipientId" (onSelect)="onItemSelect($event)"
+                    (onSelectAll)="onSelectAll($event)">
+                </ng-multiselect-dropdown>
+                <div *ngIf="RecipientError" class="validation-msg">
+                    <span>Recipient is required</span>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col">
+                <label for="fromname" class="">From Name<span class="validation-msg"> *</span></label>
+                <input type="text" class="input-field" placeholder="Enter name here" [(ngModel)]="RecipientFromName"
+                    (blur)="onFromName()">
+                <div *ngIf="RecipientFromNameError" class="validation-msg">
+                    <span>From name is required</span>
+                </div>
+            </div>
+            <div class="col">
+                <label for="type" class="">From Email<span class="validation-msg"> *</span></label>
+                <select class="input-field" name="type" [(ngModel)]="RecipientFromEmailId"
+                    (change)="onchangeFromEmail($event)">
+                    <option *ngFor="let item of EmailList" [value]="item.id"
+                        [selected]="item.id == RecipientFromEmailId">
+                        {{ item.emailId }}
+                    </option>
+                </select>
+                <div *ngIf="RecipientFromEmailError" class="validation-msg">
+                    <span>From email is required</span>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col">
+                <label for="replyto" class="">Reply To<span class="validation-msg"> *</span></label>
+                <input type="text" class="input-field" placeholder="Enter reply to here" [(ngModel)]="RecipientReplyTo"
+                    (blur)="onReplyTo()">
+                <div *ngIf="RecipientReplyToError" class="validation-msg">
+                    <span>Reply to is required</span>
+                </div>
+            </div>
+            <div class="col">
+                <label for="type" class="">Email Type<span class="validation-msg"> *</span></label>
+                <select class="input-field" name="type" [(ngModel)]="RecipientEmailTypeId"
+                    (change)="onchangeEmailType($event)">
+                    <option *ngFor="let item of EmailTypeList" [value]="item.id"
+                        [selected]="item.id == RecipientEmailTypeId">
+                        {{ item.name }}
+                    </option>
+                </select>
+                <div *ngIf="RecipientEmailTypeError" class="validation-msg">
+                    <span>Email type is required</span>
+                </div>
+            </div>
+        </div>
+        <br>
+        <button (click)="showSavedTemplate()">Used Saved Template</button>
+        <br>
+        <br>
+        <email-editor *ngIf="showEditior" #editor (loaded)="editorLoaded($event)" (ready)="editorReady($event)">
+        </email-editor>
+        <br>
+        <br>
+        <div>
+            <div>
+                <button class="button button-primary-o" (click)="uploader.click()">Upload</button>
+                <input hidden type="file" multiple #uploader (change)="onFilesSelect($event)" />
+            </div>
+            <br>
+            <div class="row col-md-12 py-3" *ngIf="files?.length > 0">
+                <div class="col-md-12" *ngFor="let item of files; let i=index">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="docheadtxt">Document Name</div>
+                        </div>
+                        <div class="col-md-6">
+                            <div> {{item.name}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div
+            *ngIf="((SubjectName != null || SubjectName != '') && subjectNameError == false) && (RecipientId.length != 0 && RecipientError == false)
+     && ((RecipientFromName != null || RecipientFromName != '') && RecipientFromNameError == false) && (RecipientFromEmailId != 0 && RecipientFromEmailError == false) 
+     && ((RecipientReplyTo != null || RecipientReplyTo != '') && RecipientReplyToError == false) && (RecipientEmailTypeId != 0 && RecipientEmailTypeError == false)">
+            <button (click)="sendEmailNow()">Save Design</button>
+        </div>
+        <div *ngIf="SendBtnsShow">
+            <button (click)="save(1)">Send Now</button>
+            <button (click)="save(2)">Send Test Mail</button>
+            <button (click)="ShowSchedule()">Schedule To Send</button>
+            <button (click)="save(4)">Save as Draft</button>
+        </div>
+    </div>
+</div>
+
+
+<!-------------------------------------Saved Template List Show----------------------------------------------->
+<div class="modal-wrapper" *ngIf="savedTemplateShow">
+    <div class="modal" style="max-width: 1000px;">
+        <div class="modal-title pb-0">
+            <div class="company-wrapper d-flex align-items-center justify-content-between">
+                <div>
+                    <h3>Saved Templates</h3>
+                </div>
+                <div>
+                    <button class="button icon-only button-clear ml-2" (click)="cancelSavedTemplate()">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                            <path d="M0 0h24v24H0V0z" fill="none" />
+                            <path
+                                d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-content pt-0">
+                <div class="row mt-3">
+                    <div *ngIf="TemplateList.length > 0 ">
+                        <div *ngFor="let item of TemplateList">
+                            <div [innerHtml]="item.template | safeHtml"></div>
+                            <button (click)="useTemplate(item)">Use this template</button>
+                        </div>
+                    </div>
+                </div>
+                <br>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-------------------------------------Success popup Show----------------------------------------------->
+<div class="modal-wrapper" *ngIf="successShow">
+    <div class="modal" style="max-width: 1000px;">
+        <div class="modal-title pb-0">
+            <div class="modal-content pt-0">
+                <div class="row mt-3">
+                    <div *ngIf="SaveId == 1">
+                        Mail sended successfully.
+                    </div>
+                    <div *ngIf="SaveId == 2">
+                        Test Mail sended successfully.
+                    </div>
+                    <div *ngIf="SaveId == 3">
+                        Mail scheduled successfully.
+                    </div>
+                    <div *ngIf="SaveId == 4">
+                        Draft the Mail successfully.
+                    </div>
+                    <button (click)="ClosesuccessPopup()">Ok</button>
+                </div>
+                <br>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-------------------------------------Schedule Mail popup Show----------------------------------------------->
+<div class="modal-wrapper" *ngIf="showSchedule">
+    <div class="modal" style="max-width: 1000px;">
+        <div class="modal-title pb-0">
+            <div class="modal-content pt-0">
+                <div class="row mt-3">
+                    <input [owlDateTime]="dt1" [owlDateTimeTrigger]="dt1" placeholder="Date Time"
+                        [(ngModel)]="selectedMoment">
+                    <owl-date-time #dt1></owl-date-time>
+                    <br>
+                    {{selectedMoment}}
+                    <br>
+                    <button (click)="save(3)">Schedule Email</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,760 @@
+<app-header [ProfileImg]="ProfileImageData" style="visibility: hidden;"></app-header>
+<div class="">
+  <div class="sub-header d-flex align-items-center justify-content-between pb-2">
+    <div>
+      <h3>Settings</h3>
+    </div>
+  </div>
+  <!---------------------------------------Settings Tabs--------------------------->
+  <div class="documents-table ">
+    <div class="row">
+      <div class="header-nav tab-menu pl-0 d-flex align-items-center justify-content-between">
+        <div class="nav-right">
+          <ul class="d-flex pl-0">
+            <li id="settings_myaccount" class="nav-link active" [ngClass]="{active: Selected == 'MyAccount'}"
+              (click)="onMyAccount()">
+              My Account
+            </li>
+            <li id="settings_companyusers" class="nav-link active" [ngClass]="{active: Selected == 'CompanyUsers'}"
+              (click)="onCompanyUsers()">
+              Company Users
+            </li>
+            <li id="settings_adminnotifications" class="nav-link active"
+              [ngClass]="{active: Selected == 'AdminNotifications'}" (click)="onAdminNotifications()">
+              Admin Notifications
+            </li>
+            <li id="settings_usernotifications" class="nav-link active"
+              [ngClass]="{active: Selected == 'UserNotifications'}" (click)="onUserNotification()">
+              User Notifications
+            </li>
+            <li id="settings_privacypolicy" class="nav-link active" [ngClass]="{active: Selected == 'PrivacyPolicy'}"
+              (click)="onPrivacyPolicy()">
+              Privacy Policy
+            </li>
+            <li id="settings_termsandconditions" class="nav-link active"
+              [ngClass]="{active: Selected == 'TermsAndConditions'}" (click)="onTermsAndConditions()">
+              Terms and Conditions
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="table-wrapper mt-4">
+    <div *ngIf="MyAccountShow">
+      <div class="table-wrapper d-flex">
+        <div class="thumbnail-wrapper mr-5">
+          <div class="profile-account">
+            <div class="avatar avatar-xxl">
+              <span class="avatar-text"></span>
+              <div>
+                <div *ngIf="ProfileImage[0].profileImageUrl == null">
+                  <img src="../../assets/images/user-profile.png" alt="" width="120" height="120">
+                </div>
+                <div *ngIf="ProfileImage[0].profileImageUrl != null">
+                  <img src="{{ProfileImage[0].profileImageUrl}}" alt="" width="120" height="120"><br>
+                </div>
+              </div>
+            </div>
+            <div class="text-center mt-2">
+              <h3>{{UserData?.firstName}} {{UserData?.lastName}}</h3>
+              <p>Since, {{UserData?.createdOn | date}}</p>
+            </div>
+          </div>
+          <div class="text-center">
+            <button id="settings_uploadprofile" type="button" class="button-outline mt-3"
+              (click)="uploader.click()">Upload
+              Photo</button>
+            <input id="settings_uploadprofile" hidden type="file" #uploader (change)="uploadFile($event)" /><br>
+          </div>
+        </div>
+
+
+        <div class="panel">
+          <div class="panel-content">
+            <form [formGroup]="AccountForm" id="af">
+              <h3 class="contact-header pl-2">Contact Information</h3>
+              <div class="row mt-4">
+                <div class="col">
+                  <span class="label color-primary-tint">First Name</span>
+                  <input type="text" class="input-field" id="settings_af_firstname" formControlName="FirstName"
+                    (blur)="onFirstName()">
+                  <div *ngIf="FirstnameError" class="validation-msg">
+                    <span>First Name is required</span>
+                  </div>
+                </div>
+                <div class="col pl-0">
+                  <span class="label color-primary-tint">Last Name</span>
+                  <input type="text" class="input-field" id="settings_af_lastname" formControlName="LastName"
+                    (blur)="onLastName()">
+                  <div *ngIf="LastnameError" class="validation-msg">
+                    <span>Last Name is required</span>
+                  </div>
+                </div>
+              </div>
+              <div class="row mt-4">
+                <div class="col">
+                  <span class="label color-primary-tint">Phone</span>
+                  <input type="text" class="input-field" id="settings_af_phone" formControlName="Phone"
+                    (blur)="onPhone()">
+                  <div *ngIf="PhoneError || PhoneExists" class="validation-msg">
+                    <span *ngIf="PhoneError">Phone Number is required</span>
+                    <span *ngIf="PhoneExists">Phone Number already exists</span>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="validation-msg" *ngIf="PhoneVerify == false">Unverified</div>
+                  <div style="color: green;" *ngIf="PhoneVerify == true">Verified</div><br>
+                  <button id="settings_af_verifyphone" class="button-outline" *ngIf="PhoneVerify == false"
+                    (click)="onVerifyEmail('Phone')">Verify Phone</button>
+                </div>
+                <div class="col">
+                  <span class="label color-primary-tint">Email</span>
+                  <input type="text" class="input-field" id="settings_af_email" formControlName="Email"
+                    (blur)="onEmail()">
+                  <div *ngIf="EmailError || EmailExists" class="validation-msg">
+                    <span *ngIf="EmailError">Email is required</span>
+                    <span *ngIf="EmailExists">Email already exists</span>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="validation-msg" *ngIf="EmailVerify == false">Unverified</div>
+                  <div style="color: green;" *ngIf="EmailVerify == true">Verified</div><br>
+                  <button id="settings_af_verifyemail" class="button-outline" *ngIf="EmailVerify == false"
+                    (click)="onVerifyEmail('Email')">Verify Email</button>
+                </div>
+              </div>
+
+
+              <div class="row mt-4">
+                <div class="col">
+                  <span class="label color-primary-tint">Date of Birth</span>
+                  <input type="date" class="input-field" id="settings_af_dob" formControlName="DOB">
+                </div>
+              </div>
+              <div class="row mt-4">
+                <div class="col">
+                  <span class="label color-primary-tint">Password Information</span><br>
+                  <button id="settings_af_changepassword" class="button-outline" (click)="onChangePassword()">Change
+                    Password</button>
+                  <div class="sub-text mt-2">Last Password was changed on {{UserData?.passwordChangedOn | date}}</div>
+                </div>
+                <div class="col">
+                  <div>
+                    <label>Enable Two Factor Authentication (2FA)</label>
+                  </div>
+                  <div>
+                    <label class="switch">
+                      <input id="settings_af_twofactor" type="checkbox" formControlName="TwoFactor"
+                        (change)="onTwoFactor($event)">
+                      <span class="slider round"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <br>
+              <div class="col">
+                <button id="settings_af_saveprofile" class="button-outline-secondary" (click)="SaveProfile()">Save
+                  Changes</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="CompanyUsersShow">
+      <div class="sub-header d-flex align-items-center justify-content-between pb-2">
+        <button id="settings_adduser" class="button-outline" type="button" (click)="onAddAdminUser()">Add Users</button>
+      </div>
+      <div class="table-wrapper mt-4">
+        <div *ngIf="AdminUserList == 0">No Users Yet...</div>
+        <table class="documents-table" *ngIf="AdminUserList.length > 0">
+          <thead>
+            <tr>
+              <th scope="col">User name</th>
+              <th scope="col">Title</th>
+              <th scope="col">Access Permission</th>
+              <th scope="col">Date</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of AdminUserList">
+              <td>{{item.firstName}} {{item.lastName}}<br>
+                {{item.emailId}}<br>
+                <span *ngIf="item.isOwner == true">(owner)</span>
+              </td>
+              <td>{{item.title}}</td>
+              <td>
+                <span *ngFor="let i of item.roleMapping">
+                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
+                    <path d="M0 0h24v24H0V0z" fill="none" />
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z" />
+                  </svg>
+                  {{i.featureName}}<br></span>
+              </td>
+              <td>{{item.createdOn | date}}</td>
+              <td>
+                <span>
+                  <label class="switch">
+                    <input id="settings_adminaccountstatus" type="checkbox" [(ngModel)]="item.status"
+                      (change)="onAdminAcccountStatus(item)" [disabled]="item.id == UserId">
+                    <span class="slider round"></span>
+                  </label>
+                </span>
+                <span id="settings_editadminuser_{{item.id}}" class="action-icon" (click)="EditAdminUser(item)">
+                  <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="#03260A">
+                    <path d="M0 0h24v24H0V0z" fill="none" />
+                    <path
+                      d="M14.06 9.02l.92.92L5.92 19H5v-.92l9.06-9.06M17.66 3c-.25 0-.51.1-.7.29l-1.83 1.83 3.75 3.75 1.83-1.83c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29zm-3.6 3.19L3 17.25V21h3.75L17.81 9.94l-3.75-3.75z" />
+                  </svg>
+                </span>
+                <span id="settings_deleteadminuser_{{item.id}}" class="action-icon" (click)="DeleteAdminUser(item)">
+                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
+                    <path d="M0 0h24v24H0V0z" fill="none" />
+                    <path
+                      d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-3.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z" />
+                  </svg>
+                </span>
+                <span id="settings_keyadminuser_{{item.id}}" (click)="KeyAdminUser(item)" *ngIf="item.isOwner != true">
+                  <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px"
+                    viewBox="0 0 24 24" width="24px" fill="#000000">
+                    <g>
+                      <rect fill="none" height="24" width="24" />
+                    </g>
+                    <g>
+                      <path
+                        d="M21,10h-8.35C11.83,7.67,9.61,6,7,6c-3.31,0-6,2.69-6,6s2.69,6,6,6c2.61,0,4.83-1.67,5.65-4H13l2,2l2-2l2,2l4-4.04L21,10z M7,15c-1.65,0-3-1.35-3-3c0-1.65,1.35-3,3-3s3,1.35,3,3C10,13.65,8.65,15,7,15z" />
+                    </g>
+                  </svg>
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div *ngIf="AdminNotificationShow">
+      <div class="row">
+        <div class="col">
+          <div *ngFor="let item of AdminEmailTemplate">
+            <div class="header-nav tab-menu pl-0 mb-4">
+              <div class="d-flex align-items-center justify-content-between pb-2">
+                <h3 id="settings_editemailtemplate_{{item.id}}" (click)="onEmailTemplate(item)">{{item.templateName}}
+                </h3>
+                <span>
+                  <label class="switch">
+                    <input id="settings_adminemailtemplate_{{item.id}}" type="checkbox" [(ngModel)]="item.isEnabled"
+                      (change)="onAdminEmailTemplate(item)">
+                    <span class="slider round"></span>
+                  </label>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="d-flex align-items-center justify-content-between pb-2">
+            <div class="col">Subject</div>
+            <div class="col"><input type="text" class="input-field" id="settings_adminsubjectcontent"
+                [(ngModel)]="EmailSubject"></div>
+          </div>
+          <div>
+            <ckeditor id="settings_adminbodycontent" [editor]="Editor" data="{{EmailContent}}"
+              [(ngModel)]="EmailContent">
+            </ckeditor>
+          </div>
+          <div>
+            <button id="settings_adminpreviewtemplate" class="button-outline mr-3" (click)="PreviewTemplate()">Preview
+              Template</button>
+            <button id="settings_adminsavetemplate" class="button-outline" (click)="SaveTemplate()">Save
+              Template</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="UserNotificationShow">
+      <div class="row">
+        <div class="col">
+          <div *ngFor="let item of UserEmailTemplate">
+            <div class="header-nav tab-menu pl-0 mb-4">
+              <div class="d-flex align-items-center justify-content-between pb-2">
+                <h3 id="settings_useremailtemplate" (click)="onEmailTemplate(item)">{{item.templateName}}</h3>
+                <span>
+                  <label class="switch">
+                    <input id="settings_useradminemailtemplate" type="checkbox" [(ngModel)]="item.isEnabled"
+                      (change)="onAdminEmailTemplate(item)">
+                    <span class="slider round"></span>
+                  </label>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="d-flex align-items-center justify-content-between pb-2">
+            <div class="col">Subject</div>
+            <div class="col"><input id="settings_useremailcontent" type="text" class="input-field"
+                [(ngModel)]="EmailSubject"></div>
+          </div>
+          <div>
+            <ckeditor id="settings_useremailbodycontent" [editor]="Editor" data="{{EmailContent}}"
+              [(ngModel)]="EmailContent">
+            </ckeditor>
+          </div>
+          <div>
+            <button id="settings_userpreviewtemplate" class="button-outline mr-3" (click)="PreviewTemplate()">Preview
+              Template</button>
+            <button id="settings_usersavetemplate" class="button-outline" (click)="SaveTemplate()">Save
+              Template</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="PrivacyPolicyShow">
+      <div>
+        <h3>{{EmailSubject}}</h3>
+        <ckeditor id="settings_ppemailcontent" [editor]="Editor" data="{{EmailContent}}" [(ngModel)]="EmailContent">
+        </ckeditor>
+        <div>
+          <button id="settings_ppsave" class="button-outline" (click)="SavePrivacyPolicy()">Save</button>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="TermsAndConditionsShow">
+      <div>
+        <h3>{{EmailSubject}}</h3>
+        <ckeditor id="settings_tacemailcontent" [editor]="Editor" data="{{EmailContent}}" [(ngModel)]="EmailContent">
+        </ckeditor>
+        <div>
+          <button id="settings_tacsave" class="button-outline" (click)="SavePrivacyPolicy()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-wrapper" *ngIf="OtpPopup">
+    <div class="modal" style="max-width: 650px;">
+      <div class="modal-title pb-4">
+        <div class="company-wrapper d-flex align-items-center justify-content-between">
+          <div>
+            <h2>Verify Email</h2>
+          </div>
+          <div>
+            <button id="settings_otppopup_x" class="button icon-only button-clear ml-2" (click)="OtpPopup = false">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                <path d="M0 0h24v24H0V0z" fill="none" />
+                <path
+                  d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-content pt-0">
+        Enter the One Time Password that has been sent to the registered email.<br>
+        <ng-otp-input id="settings_otppopup_otpemail" (onInputChange)="onOtpChange($event)" [config]="{length:6}">
+        </ng-otp-input>
+      </div>
+      <div class="modal-footer text-center mt-5">
+        <button id="settings_otppopup_resend" class="button-outline mr-3"
+          (click)="ResetOtpEmail('Email')">Resend</button>
+        <button id="settings_otppopup_verify" class="button-outline mr-3" [disabled]="VerifyEmailDisabled"
+          (click)="VerifyOtpEmail()">Verify</button>
+      </div>
+    </div>
+  </div>
+  <div class="modal-wrapper" *ngIf="PhoneOtpPopup">
+    <div class="modal" style="max-width: 650px;">
+      <div class="modal-title pb-4">
+        <div class="company-wrapper d-flex align-items-center justify-content-between">
+          <div>
+            <h3>Verify Phone Number</h3>
+          </div>
+          <div>
+            <button id="settings_photppopup_x" class="button icon-only button-clear ml-2"
+              (click)="PhoneOtpPopup = false">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                <path d="M0 0h24v24H0V0z" fill="none" />
+                <path
+                  d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-content pt-0 ">
+        <p class="pb-3">
+          Enter the One Time Password that has been sent to the registered phone number.
+        </p>
+        <ng-otp-input id="settings_photppopup_otpphone" (onInputChange)="onOtpPhoneChange($event)"
+          [config]="{length:6}"></ng-otp-input>
+      </div>
+      <div class="modal-footer text-center mt-5">
+        <button id="settings_photppopup_resend" class="button mr-3" (click)="ResetOtpEmail('Phone')">Resend</button>
+        <button id="settings_photppopup_verify" class="button-outline" [disabled]="VerifyPhoneDisabled"
+          (click)="VerifyOtpPhone()">Verify</button>
+      </div>
+    </div>
+  </div>
+  <div class="modal-wrapper" *ngIf="UpdatePasswordPopup">
+    <div class="modal" style="max-width: 650px;">
+      <div class="modal-title pb-4">
+        <div class="company-wrapper d-flex align-items-center justify-content-between">
+          <div>
+            <h3>Update Password</h3>
+          </div>
+          <div>
+            <button id="settings_upp_x" class="button icon-only button-clear ml-2"
+              (click)="UpdatePasswordPopup = false">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                <path d="M0 0h24v24H0V0z" fill="none" />
+                <path
+                  d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-content pt-0">
+        <div class=" ">
+          <span class="label color-primary-tint">Current Password</span><br>
+          <input id="settings_upp_currentpassword" type="password" class="input-field" placeholder="Current Password"
+            [(ngModel)]="CurrentPassword" (blur)="onCurrentPassword()">
+          <div class="validation-msg">
+            <div *ngIf="EmptyCurrentPassword">Current Password field shouldn’t be empty</div>
+          </div>
+        </div>
+        <br>
+        <div class="">
+          <span class="label color-primary-tint">New Password</span><br>
+          <div class="field-group">
+            <div class="input-field-group">
+              <input id="settings_upp_newpassword" [type]="showPassword ? 'text' : 'password'" class="input-field"
+                [(ngModel)]="NewPassword" (keydown.space)="$event.preventDefault();" (blur)="onPassword()"
+                placeholder="New Password">
+              <span class="input-field-btn view-pwd">
+                <button id="settings_upp_showpassword" class="button button-clear icon-only" (click)="Password()"
+                  type="button">
+                  <svg *ngIf="showPassword" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24"
+                    width="20">
+                    <path d="M0 0h24v24H0V0z" fill="none" />
+                    <path
+                      d="M12 6c3.79 0 7.17 2.13 8.82 5.5C19.17 14.87 15.79 17 12 17s-7.17-2.13-8.82-5.5C4.83 8.13 8.21 6 12 6m0-2C7 4 2.73 7.11 1 11.5 2.73 15.89 7 19 12 19s9.27-3.11 11-7.5C21.27 7.11 17 4 12 4zm0 5c1.38 0 2.5 1.12 2.5 2.5S13.38 14 12 14s-2.5-1.12-2.5-2.5S10.62 9 12 9m0-2c-2.48 0-4.5 2.02-4.5 4.5S9.52 16 12 16s4.5-2.02 4.5-4.5S14.48 7 12 7z" />
+                  </svg>
+                  <svg *ngIf="!showPassword" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24"
+                    width="20">
+                    <path d="M0 0h24v24H0V0zm0 0h24v24H0V0zm0 0h24v24H0V0zm0 0h24v24H0V0z" fill="none" />
+                    <path
+                      d="M12 6c3.79 0 7.17 2.13 8.82 5.5-.59 1.22-1.42 2.27-2.41 3.12l1.41 1.41c1.39-1.23 2.49-2.77 3.18-4.53C21.27 7.11 17 4 12 4c-1.27 0-2.49.2-3.64.57l1.65 1.65C10.66 6.09 11.32 6 12 6zm-1.07 1.14L13 9.21c.57.25 1.03.71 1.28 1.28l2.07 2.07c.08-.34.14-.7.14-1.07C16.5 9.01 14.48 7 12 7c-.37 0-.72.05-1.07.14zM2.01 3.87l2.68 2.68C3.06 7.83 1.77 9.53 1 11.5 2.73 15.89 7 19 12 19c1.52 0 2.98-.29 4.32-.82l3.42 3.42 1.41-1.41L3.42 2.45 2.01 3.87zm7.5 7.5l2.61 2.61c-.04.01-.08.02-.12.02-1.38 0-2.5-1.12-2.5-2.5 0-.05.01-.08.01-.13zm-3.4-3.4l1.75 1.75c-.23.55-.36 1.15-.36 1.78 0 2.48 2.02 4.5 4.5 4.5.63 0 1.23-.13 1.77-.36l.98.98c-.88.24-1.8.38-2.75.38-3.79 0-7.17-2.13-8.82-5.5.7-1.43 1.72-2.61 2.93-3.53z" />
+                  </svg>
+                </button>
+              </span>
+            </div>
+            <div class="validation-msg">
+              <div *ngIf="EmptyPassword">New Password field shouldn’t be empty</div>
+              <div *ngIf="ValidLowercase">
+                <br>Password must have one lowercase character.
+              </div>
+              <div *ngIf="ValidUppercase">
+                Password must have one uppercase character.
+              </div>
+              <div *ngIf="ValidNumbercase">
+                Password must have one number.
+              </div>
+              <div *ngIf="ValidSpecialcase">
+                Password must have one special character.
+              </div>
+              <div *ngIf="ValidLengthcase">
+                Password must be at least 12 characters.
+              </div>
+              <div *ngIf="MismatchCurrentPassword">
+                New Password must be different from Current Password
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="">
+          <span class="label color-primary-tint">Confirm New Password</span><br>
+          <div class="input-field-group">
+            <input id="settings_upp_confirmnewpassword" [type]="showConfrimPassword ? 'text' : 'password'"
+              class="input-field mt-1" [(ngModel)]="ConfirmNewPassword" (keydown.space)="$event.preventDefault();"
+              (blur)="onConfirmPassword()" placeholder="Confirm New Password">
+            <span class="input-field-btn view-pwd">
+              <button id="settings_upp_showconfirmpassword" class="button button-clear icon-only"
+                (click)="ConfirmPassword()" type="button">
+                <svg *ngIf="showConfrimPassword" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24"
+                  width="20">
+                  <path d="M0 0h24v24H0V0z" fill="none" />
+                  <path
+                    d="M12 6c3.79 0 7.17 2.13 8.82 5.5C19.17 14.87 15.79 17 12 17s-7.17-2.13-8.82-5.5C4.83 8.13 8.21 6 12 6m0-2C7 4 2.73 7.11 1 11.5 2.73 15.89 7 19 12 19s9.27-3.11 11-7.5C21.27 7.11 17 4 12 4zm0 5c1.38 0 2.5 1.12 2.5 2.5S13.38 14 12 14s-2.5-1.12-2.5-2.5S10.62 9 12 9m0-2c-2.48 0-4.5 2.02-4.5 4.5S9.52 16 12 16s4.5-2.02 4.5-4.5S14.48 7 12 7z" />
+                </svg>
+                <svg *ngIf="!showConfrimPassword" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24"
+                  width="20">
+                  <path d="M0 0h24v24H0V0zm0 0h24v24H0V0zm0 0h24v24H0V0zm0 0h24v24H0V0z" fill="none" />
+                  <path
+                    d="M12 6c3.79 0 7.17 2.13 8.82 5.5-.59 1.22-1.42 2.27-2.41 3.12l1.41 1.41c1.39-1.23 2.49-2.77 3.18-4.53C21.27 7.11 17 4 12 4c-1.27 0-2.49.2-3.64.57l1.65 1.65C10.66 6.09 11.32 6 12 6zm-1.07 1.14L13 9.21c.57.25 1.03.71 1.28 1.28l2.07 2.07c.08-.34.14-.7.14-1.07C16.5 9.01 14.48 7 12 7c-.37 0-.72.05-1.07.14zM2.01 3.87l2.68 2.68C3.06 7.83 1.77 9.53 1 11.5 2.73 15.89 7 19 12 19c1.52 0 2.98-.29 4.32-.82l3.42 3.42 1.41-1.41L3.42 2.45 2.01 3.87zm7.5 7.5l2.61 2.61c-.04.01-.08.02-.12.02-1.38 0-2.5-1.12-2.5-2.5 0-.05.01-.08.01-.13zm-3.4-3.4l1.75 1.75c-.23.55-.36 1.15-.36 1.78 0 2.48 2.02 4.5 4.5 4.5.63 0 1.23-.13 1.77-.36l.98.98c-.88.24-1.8.38-2.75.38-3.79 0-7.17-2.13-8.82-5.5.7-1.43 1.72-2.61 2.93-3.53z" />
+                </svg>
+              </button>
+            </span>
+          </div>
+          <div class="validation-msg">
+            <div *ngIf="EmptyConfirmPassword">Confirm Password field shouldn’t be empty</div>
+            <div *ngIf="ValidConfirmPassword">Passwords must match.</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer text-center mt-2">
+        <button id="settings_upp_cancel" type="button" class="button  mr-3"
+          (click)="UpdatePasswordPopup=false">Cancel</button>
+        <button id="settings_upp_update" class="button-outline" (click)="onUpdatePassword()">Update</button>
+      </div>
+    </div>
+  </div>
+  <div class="modal-wrapper" *ngIf="AddAdminUserPopup">
+    <div class="modal" style="max-width: 650px;">
+      <div class="modal-title pb-4">
+        <div class="company-wrapper d-flex align-items-center justify-content-between">
+          <div>
+            <h3>Add Admin User</h3>
+          </div>
+          <div>
+            <button id="settings_aaup_x" class="button icon-only button-clear ml-2" (click)="AddAdminUserPopup = false">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                <path d="M0 0h24v24H0V0z" fill="none" />
+                <path
+                  d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-content pt-0 ">
+        <form [formGroup]="AdminUserForm" id="af">
+          <div class="row mt-4">
+            <div class="col">
+              <span class="label color-primary-tint">First Name</span>
+              <input type="text" class="input-field" id="settings_aaup_firstname" formControlName="FirstName"
+                (blur)="onAdminFirstName()">
+              <div *ngIf="AdminFirstnameError" class="validation-msg">
+                <span>First Name is required</span>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-4">
+            <div class="col">
+              <span class="label color-primary-tint">Last Name</span>
+              <input type="text" class="input-field" id="settings_aaup_lastname" formControlName="LastName"
+                (blur)="onAdminLastName()">
+              <div *ngIf="AdminLastnameError" class="validation-msg">
+                <span>Last Name is required</span>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-4">
+            <div class="col">
+              <span class="label color-primary-tint">Phone</span>
+              <input type="text" class="input-field" id="settings_aaup_phone" formControlName="Phone"
+                (blur)="onAdminPhone()" minlength="10" maxlength="10">
+              <div *ngIf="AdminPhoneError || AdminPhoneExists" class="validation-msg">
+                <span *ngIf="AdminPhoneError">Phone Number is required</span>
+                <span *ngIf="AdminPhoneExists">Phone Number already exists</span>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-4">
+            <div class="col">
+              <span class="label color-primary-tint">Email</span>
+              <input type="text" class="input-field" id="settings_aaup_email" formControlName="Email"
+                (blur)="onAdminEmail()">
+              <div *ngIf="AdminEmailError || AdminEmailExists" class="validation-msg">
+                <span *ngIf="AdminEmailError">Email is required</span>
+                <span *ngIf="AdminEmailExists">Email already exists</span>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-4">
+            <div class="col">
+              <span class="label color-primary-tint">Title</span>
+              <input type="text" class="input-field" id="settings_aaup_title" formControlName="Title"
+                (blur)="onAdminTitle()">
+              <div *ngIf="AdminTitleError" class="validation-msg">
+                <span *ngIf="AdminTitleError">Title is required</span>
+              </div>
+            </div>
+          </div>
+          <br>
+        </form>
+        <div class="row mt-4">
+          <div class="col">
+            <label>Access Control</label><br>
+            <label>
+              <input id="settings_aaup_selectall" type="checkbox" (change)="SelectAll($event)"
+                [checked]="SelectAllChecked">
+              Select All
+            </label>
+            <!-- <input id="investor_check_selectall" type="checkbox" (change)="SelectAll($event)" [(ngModel)]="SelectAllCheckbox"> -->
+            <div *ngFor="let item of RoleFeatureMapping">
+              <label>
+                <input id="settings_aaup_select_{{item.id}}" type="checkbox" (change)="Select(item,$event)"
+                  [checked]="item.active">
+                {{item.featureName}}
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer text-center mt-5">
+        <button id="settings_aaup_cancel" class="button-outline mr-3"
+          (click)="AddAdminUserPopup = false">Cancel</button>
+        <button id="settings_aaup_save" *ngIf="AdminUserId == 0" class="button-outline"
+          (click)="AdminUserSave()">Save</button>
+        <button id="settings_aaup_update" *ngIf="AdminUserId != 0" class="button-outline"
+          (click)="AdminUserSave()">Update</button>
+      </div>
+    </div>
+  </div>
+  <div class="modal-wrapper" *ngIf="AdminUserDeleteConfirmationPopup">
+    <div class="modal" style="max-width: 650px;">
+      <div class="modal-title pb-4">
+        <div class="company-wrapper d-flex align-items-center justify-content-between">
+          <div>
+            <h2>Delete Confirmation</h2>
+          </div>
+          <div>
+            <button id="settings_audcp_x" class="button icon-only button-clear ml-2"
+              (click)="AdminUserDeleteConfirmationPopup = false">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                <path d="M0 0h24v24H0V0z" fill="none" />
+                <path
+                  d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-content pt-0">
+        Are you sure want to delete this user?
+      </div>
+      <div class="modal-footer text-center mt-5">
+        <button id="settings_audcp_no" class="button-outline mr-3"
+          (click)="AdminUserDeleteConfirmationPopup = false">No</button>
+        <button id="settings_audcp_yes" class="button-outline" (click)="ConfirmDeleteAdminUser()">Yes</button>
+      </div>
+    </div>
+  </div>
+  <div class="modal-wrapper" *ngIf="AdminAccountStatusPopup">
+    <div class="modal" style="max-width: 650px;">
+      <div class="modal-title pb-4">
+        <div class="company-wrapper d-flex align-items-center justify-content-between">
+          <div>
+            <h2 *ngIf="!AdminAccountEnable">Account Disabled</h2>
+            <h2 *ngIf="AdminAccountEnable">Account Enabled</h2>
+          </div>
+          <div>
+            <button id="settings_aasp_x" class="button icon-only button-clear ml-2" (click)="CancelConfirm()">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                <path d="M0 0h24v24H0V0z" fill="none" />
+                <path
+                  d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-content pt-0">
+        <div *ngIf="!AdminAccountEnable">Are you sure want to disabled this user?</div>
+        <div *ngIf="AdminAccountEnable">Are you sure want to enable this user?</div>
+      </div>
+      <div class="modal-footer text-center mt-5">
+        <button id="settings_aasp_no" class="button-outline mr-3" (click)="CancelConfirm()">No</button>
+        <button id="settings_aasp_yes" class="button-outline" (click)="AdminUserAccountStatus()">Yes</button>
+      </div>
+    </div>
+  </div>
+  <div class="modal-wrapper" *ngIf="AdminOwnerAccountPopup">
+    <div class="modal" style="max-width: 650px;">
+      <div class="modal-title pb-4">
+        <div class="company-wrapper d-flex align-items-center justify-content-between">
+          <div>
+            <h2>Ownership Account</h2>
+          </div>
+          <div>
+            <button id="settings_aoap_x" class="button icon-only button-clear ml-2"
+              (click)="AdminOwnerAccountPopup = false">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                <path d="M0 0h24v24H0V0z" fill="none" />
+                <path
+                  d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-content pt-0">
+        <div>Are you sure want to owner this user?</div>
+      </div>
+      <div class="modal-footer text-center mt-5">
+        <button id="settings_aoap_no" class="button-outline mr-3" (click)="AdminOwnerAccountPopup = false">No</button>
+        <button id="settings_aoap_yes" class="button-outline" (click)="UpdateOwnerAccount()">Yes</button>
+      </div>
+    </div>
+  </div>
+  <div class="modal-wrapper" *ngIf="EmailTemplateActiveInactivePopup">
+    <div class="modal" style="max-width: 650px;">
+      <div class="modal-title pb-4">
+        <div class="company-wrapper d-flex align-items-center justify-content-between">
+          <div>
+            <h2 *ngIf="!EmailTemplateEnable">Email Template Disabled</h2>
+            <h2 *ngIf="EmailTemplateEnable">Email Template Enabled</h2>
+          </div>
+          <div>
+            <button id="settings_etaip_x" class="button icon-only button-clear ml-2" (click)="CancelEmailTemplate()">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                <path d="M0 0h24v24H0V0z" fill="none" />
+                <path
+                  d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-content pt-0">
+        <div *ngIf="!EmailTemplateEnable">Are you sure want to disabled this template?</div>
+        <div *ngIf="EmailTemplateEnable">Are you sure want to enable this template?</div>
+      </div>
+      <div class="modal-footer text-center mt-5">
+        <button id="settings_etaip_no" class="button-outline mr-3" (click)="CancelEmailTemplate()">No</button>
+        <button id="settings_etaip_yes" class="button-outline" (click)="EmailTemplateStatusUpdate()">Yes</button>
+      </div>
+    </div>
+  </div>
+  <div class="modal-wrapper" *ngIf="PreviewEmailPopup">
+    <div class="modal" style="max-width: 650px;">
+      <div class="modal-title pb-4">
+        <div class="company-wrapper d-flex align-items-center justify-content-between">
+          <div>
+            <h2>Preview Email Template</h2>
+          </div>
+          <div>
+            <button id="settings_pep_x" class="button icon-only button-clear ml-2" (click)="PreviewEmailPopup = false">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                <path d="M0 0h24v24H0V0z" fill="none" />
+                <path
+                  d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-content pt-0">
+        <ckeditor [editor]="Editor" data="{{EmailContent}}" [(ngModel)]="EmailContent" [disabled]="AdminEmailTemplate">
+        </ckeditor>
+      </div>
+    </div>
+  </div>
+  <div class="loader" *ngIf="Loader">
+    <div class="dot-flashing"></div>
+  </div>

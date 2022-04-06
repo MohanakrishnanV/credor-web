@@ -1,0 +1,361 @@
+<!-- Header Start -->
+<!-- <app-header></app-header> -->
+<!-- Header End -->
+
+
+<!-- Sidebar Start -->
+<!-- <app-side-bar></app-side-bar> -->
+<!-- Sidebar End -->
+<div class="">
+  <div class="">
+    <div class="sub-header d-flex align-items-center justify-content-between pb-2">
+      <div>
+        <h3>Email</h3>
+      </div>
+    </div>
+    <!---------------------------------------Email Tabs--------------------------->
+    <div class="documents-table ">
+      <div class="row">
+        <div class="header-nav tab-menu pl-0 d-flex align-items-center justify-content-between">
+          <div class="nav-right">
+            <ul class="d-flex pl-0">
+              <li class="nav-link active" [ngClass]="{active: Selected == 'sendEmail'}" (click)="selectSendEmailTab(1)">
+                Send Email
+              </li>
+              <li class="nav-link active" [ngClass]="{active: Selected == 'emailTemplate'}"
+                (click)="selectEmailTemplateTab(2)">
+                Email Templates
+              </li>
+              <li class="nav-link active" [ngClass]="{active: Selected == 'manageEmails'}"
+              (click)="selectmanageTemplateTab(3)">
+                Manage Emails
+              </li>
+              <li class="nav-link active" [ngClass]="{active: Selected == 'verifyDomain'}"
+                (click)="selectVerifyDomainTab(4)">
+                Verify Domain
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-------------------------Email Deliverablity-------------------->
+    <div *ngIf="TabId == 4">
+      <h3>Email Deliverablity</h3>
+      <br>
+      <small>To send mass email you will need to verify your domain and add a custom 'from' email. This process will
+        authenticate emails you send out and provide the highest deliverablity possible.</small>
+      <div>
+        <h3>Verify your Domain</h3>
+        <br>
+        <small>Add the domain that you would like to send emails from. For example, if your email is
+          investors@greencaptial.com then the domain would be greencaptial.com. learn more</small>
+        <br>
+        <!----------------------------------Domain Table--------------------------------------->
+        <table #tableInput class="documents-table" *ngIf="domainList.length > 0">
+          <thead>
+            <tr>
+              <th scope="col">Domain</th>
+              <th scope="col">Date Added</th>
+              <th scope="col">Status</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of domainList">
+              <td>{{item.name}}</td>
+              <td>{{item.createdOn | date: 'MMM dd, yyy'}}</td>
+              <td>{{item.status == 1 ? 'Pending' : 'Unverified'}}</td>
+              <td>
+                <span class="action-icon" (click)="deleteConformation(item, 1)">
+                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
+                    <path d="M0 0h24v24H0V0z" fill="none" />
+                    <path
+                      d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-3.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z" />
+                  </svg>
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <br>
+        <button class="button-outline" (click)="addDomain()">Add Domain</button>
+      </div>
+    </div>
+    <br>
+    <!-------------------------Add From Email-------------------->
+    <div *ngIf="TabId == 4">
+      <h3>Add From Email</h3>
+      <br>
+      <small>Choose an email that will be recognized by your subscribers. You can add multiple from emails.</small>
+      <br>
+      <!----------------------------------From Email Table--------------------------------------->
+      <table #tableInput class="documents-table" *ngIf="EmailList.length > 0">
+        <thead>
+          <tr>
+            <th scope="col">Email</th>
+            <th scope="col">From Name</th>
+            <th scope="col">Date Added</th>
+            <th scope="col">Status</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of EmailList">
+            <td>{{item.emailId}}</td>
+            <td>{{item.fromName}}</td>
+            <td>{{item.createdOn | date: 'MMM dd, yyy'}}</td>
+            <td>{{item.status == 1 ? 'Pending' : 'Unverified'}}</td>
+            <td>
+              <span class="action-icon" (click)="EditEmail(item)">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="#03260A">
+                  <path d="M0 0h24v24H0V0z" fill="none" />
+                  <path
+                    d="M14.06 9.02l.92.92L5.92 19H5v-.92l9.06-9.06M17.66 3c-.25 0-.51.1-.7.29l-1.83 1.83 3.75 3.75 1.83-1.83c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29zm-3.6 3.19L3 17.25V21h3.75L17.81 9.94l-3.75-3.75z" />
+                </svg>
+              </span>
+              <span class="action-icon" (click)="deleteConformation(item, 2)">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
+                  <path d="M0 0h24v24H0V0z" fill="none" />
+                  <path
+                    d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-3.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z" />
+                </svg>
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <br>
+      <button class="button-outline" (click)="addEmail()">Add Email</button>
+    </div>
+    <!---------------------------------Email Template ----------------------------->
+    <div *ngIf="TabId == 2">
+      <button *ngIf="!newTemplateShow" (click)="createNewTemplate()">Create Template</button>
+      <div *ngIf="!newTemplateShow && TemplateList.length > 0 ">
+        <div *ngFor="let item of TemplateList">
+          <div [innerHtml]="item.template | safeHtml"></div>
+          <button (click)="templateEdit(item, 1)">Edit</button>
+          <button (click)="templateDelete(item)">Delete</button>
+        </div>
+
+      </div>
+      <div *ngIf="newTemplateShow && !CreateEmailTemplateShow">
+        <h3>Create New Email Template</h3>
+        <div>
+          <div class="col">
+            <span class="label color-primary-tint">Template Name<span class="validation-msg"> *</span></span>
+            <input type="text" class="input-field" placeholder="Enter Template Name" [(ngModel)]="TemplateName"
+              (blur)="onTemplateName()">
+            <div *ngIf="TemplateNameError" class="validation-msg">
+              <span *ngIf="TemplateNameError ">Template name is required</span>
+            </div>
+          </div>
+          <div class="col">
+            <span class="label color-primary-tint">Description<span class="validation-msg"> *</span></span>
+            <input type="text" class="input-field" placeholder="Enter Discription" [(ngModel)]="TemplateDiscription"
+              (blur)="onTemplateDiscription()">
+            <div *ngIf="TemplateDiscriptionError" class="validation-msg">
+              <span *ngIf="TemplateDiscriptionError ">Template discription is required</span>
+            </div>
+          </div>
+          <button (click)="addTemplate()">Next</button>
+        </div>
+      </div>
+      <div *ngIf="CreateEmailTemplateShow && newTemplateShow">
+        <email-editor #editor (loaded)="editorLoaded($event)" (ready)="editorReady($event)"></email-editor>
+      </div>
+      <button *ngIf="CreateEmailTemplateShow && newTemplateShow" (click)="saveDesign()">Save Design</button>
+      <button *ngIf="CreateEmailTemplateShow && newTemplateShow && addBtnShow" (click)="save()">Save</button>
+      <button *ngIf="CreateEmailTemplateShow && newTemplateShow && UpdateBtnShow" (click)="Update()">Update</button>
+    </div>
+
+    <!-------------------------------------Send Email------------------------->
+    <div *ngIf="TabId == 1">
+      <app-send-email></app-send-email>
+    </div>
+      <!-------------------------------------Manage Email------------------------->
+      <div *ngIf="TabId == 3">
+        <app-manage-email></app-manage-email>
+      </div>
+  </div>
+</div>
+
+<!-------------------------------------Add Domain Modal----------------------------------------------->
+<div class="modal-wrapper" *ngIf="addDomainShow">
+  <div class="modal" style="max-width: 1000px;">
+    <div class="modal-title pb-0">
+      <div class="company-wrapper d-flex align-items-center justify-content-between">
+        <div>
+          <h3>Add New Domain</h3>
+        </div>
+        <div>
+          <button id="portfolio_editdishisshow_x" class="button icon-only button-clear ml-2"
+            (click)="addDomainCancel()">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+              <path d="M0 0h24v24H0V0z" fill="none" />
+              <path
+                d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="modal-content pt-0">
+        <div class="row mt-3">
+          <div class="col">
+            <label for="subject" class="">Domain Name<span class="validation-msg">*</span></label>
+            <input [datoAutoFocus]="autofocus" type="text" class="input-field" placeholder="Enter New Domain"
+              [(ngModel)]="domainName" (blur)="onDomainName()">
+            <div *ngIf="domainNameError" class="validation-msg">
+              <span>Please enter domain name</span>
+            </div>
+          </div>
+        </div>
+        <br>
+        <div class="modal-footer">
+          <button (click)="saveDomain()" class="button mr-3">Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-----------------------------------Delete Domain and Email Conformation PopUp ------------------------->
+<div class="modal-wrapper" *ngIf="delConformationShow">
+  <div class="modal">
+    <div class="modal-title">
+      <h2 *ngIf="DeleteModalId == 1">Delete Domain</h2>
+      <h2 *ngIf="DeleteModalId == 2">Delete Email</h2>
+    </div>
+    <div class="modal-content pt-0" *ngIf="DeleteModalId == 1">
+      Are you sure you want to permanently delete this domain?
+    </div>
+    <div class="modal-content pt-0" *ngIf="DeleteModalId == 2">
+      Are you sure you want to permanently delete this email?
+    </div>
+    <div class="modal-footer">
+      <button id="portfolio_distributionhisdelshow_yes" class="button-outline mr-3" (click)="DeleteItems()">Yes</button>
+      <button id="portfolio_distributionhisdelshow_no" type="button" class="button" (click)="delConformationShow=false">
+        <span>No</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-----------------------------------Add From Email Modal------------------->
+<div class="modal-wrapper" *ngIf="addFromEmailShow">
+  <div class="modal" style="max-width: 1000px;">
+    <div class="modal-title pb-0">
+      <div class="company-wrapper d-flex align-items-center justify-content-between">
+        <div>
+          <h3>{{ModalName}} From Email</h3>
+        </div>
+        <div>
+          <button id="portfolio_editdishisshow_x" class="button icon-only button-clear ml-2" (click)="addEmailCancel()">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+              <path d="M0 0h24v24H0V0z" fill="none" />
+              <path
+                d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="modal-content pt-0">
+        <div class="row mt-3">
+          <div class="col">
+            <label for="subject" class="">From Name<span class="validation-msg">*</span></label>
+            <input [datoAutoFocus]="autofocus" type="text" class="input-field" placeholder="Enter From Name"
+              [(ngModel)]="FromName" (blur)="onFromName()">
+            <div *ngIf="fromNameError" class="validation-msg">
+              <span>Please enter from name</span>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col">
+            <label for="subject" class="">Enter Email Address<span class="validation-msg">*</span></label>
+            <input [datoAutoFocus]="autofocus1" type="text" class="input-field" placeholder="Enter Username"
+              [(ngModel)]="EmailAddress" (blur)="onEmailAddress()">
+
+            <div class="emailsymbol">@</div>
+            <div *ngIf="emailAddressError" class="validation-msg">
+              <span>Please enter username</span>
+            </div>
+          </div>
+          <div class="col ptop">
+            <select class="input-field" name="type" *ngIf="ModalName == 'Add'" (change)="onchangeEmailMethod($event)"
+              [(ngModel)]="emailDomainId">
+              <option *ngFor="let item of EmailDomainList" [value]="item.id" [selected]="item.id == emailDomainId">
+                {{ item.name }}
+              </option>
+            </select>
+            <select class="input-field" name="type" *ngIf="ModalName == 'Edit'" disabled="true"
+              [(ngModel)]="emailDomainId">
+              <option *ngFor="let item of EmailDomainList" [value]="item.id" [selected]="item.id == emailDomainId">
+                {{ item.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <br>
+        <div class="modal-footer">
+          <button (click)="saveEmail()" class="button mr-3">{{ModalName}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-------------------------------------Create Template----------------------------------------------->
+<div class="modal-wrapper" *ngIf="createTemplateShow">
+  <div class="modal" style="max-width: 1000px;">
+    <div class="modal-title pb-0">
+      <div class="company-wrapper d-flex align-items-center justify-content-between">
+        <div>
+          <h3>Create Template</h3>
+        </div>
+        <div>
+          <button class="button icon-only button-clear ml-2" (click)="createTemplateShow = false">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+              <path d="M0 0h24v24H0V0z" fill="none" />
+              <path
+                d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="modal-content pt-0">
+        <div class="row mt-3">
+          <div class="col">
+            <button (click)="createNewTemplate()">Create New Template</button>
+          </div>
+        </div>
+        <br>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-----------------------------------Delete Template Conformation PopUp ------------------------->
+<div class="modal-wrapper" *ngIf="delTemplateConformationShow">
+  <div class="modal">
+    <div class="modal-title">
+      <h2>Delete Template</h2>
+    </div>
+    <div class="modal-content pt-0">
+      Are you sure you want to permanently delete this template?
+    </div>
+    <div class="modal-footer">
+      <button id="portfolio_distributionhisdelshow_yes" class="button-outline mr-3"
+        (click)="DeleteTemplateItems()">Yes</button>
+      <button id="portfolio_distributionhisdelshow_no" type="button" class="button"
+        (click)="delTemplateConformationShow=false">
+        <span>No</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="loader" *ngIf="Loader">
+  <div class="dot-flashing"></div>
+</div>

@@ -1,0 +1,390 @@
+<!-- Header Start -->
+<!-- <app-header></app-header> -->
+<!-- Header End -->
+
+  <!-- Main Content Start -->
+  <main>
+    <div class="">
+      <button id="investment_back" class="button mb-2" (click)="onBack()">Back</button>
+      <div class="header-nav tab-menu p-3 mb-4 d-flex align-items-center justify-content-between">
+        <div>
+          <h3>{{InvestmentData?.name}}</h3>
+          <p>{{InvestmentData?.entityName}}</p>
+        </div>
+        <div class="summary-details d-flex">
+          <div class="pr-5 pt-0" *ngFor="let key of KeyHighlights">
+            <h3 *ngIf="key.name == 'Offering Size' || key.name == 'Minimum Investment'">{{key.value | currency:'USD' :
+              'symbol' : '1.0-0'}}</h3>
+            <h3 *ngIf="key.name != 'Offering Size' && key.name != 'Minimum Investment'">{{key.value}}
+            </h3>
+            <p>{{key.name}}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="marketplace-deal-wrapper">
+        <div class="row">
+          <div class="col-sm-12 p-0">
+            <div class="card p-4">
+              <div class="card-content">
+                <div class="form-wrapper" *ngIf="StepNavShow">
+                  <div class="step-nav d-flex justify-content-center">
+                    <div [ngClass]="{active: diligenceshow,done: diligencedone}"
+                      class="step-nav-item p-3 d-flex align-items-center flex-column">
+                      <span class="step-indicator mb-2">
+                        <span *ngIf="diligenceshow && !diligencedone" class="icon icon-24 icon-current"></span>
+                        <span *ngIf="!diligenceshow && !diligencedone" class="icon icon-24 icon-radio"></span>
+                        <span *ngIf="diligencedone" class="icon icon-24 icon-done"></span>
+                      </span>
+                      <span>Diligence</span>
+                    </div>
+                    <div [ngClass]="{active: investshow,done: investdone}"
+                      class="step-nav-item p-3 d-flex align-items-center flex-column">
+                      <span class="step-indicator mb-2">
+                        <span *ngIf="investshow && !investdone" class="icon icon-24 icon-current"></span>
+                        <span *ngIf="!investshow && !investdone" class="icon icon-24 icon-radio"></span>
+                        <span *ngIf="investdone" class="icon icon-24 icon-done"></span>
+                      </span>
+                      <span>Invest</span>
+                    </div>
+
+                    <div [ngClass]="{active: esignshow,done: esigndone}"
+                      class="step-nav-item p-3 d-flex align-items-center flex-column">
+                      <span class="step-indicator mb-2">
+                        <span *ngIf="esignshow && !esigndone" class="icon icon-24 icon-current"></span>
+                        <span *ngIf="!esignshow && !esigndone" class="icon icon-24 icon-radio"></span>
+                        <span *ngIf="esigndone" class="icon icon-24 icon-done"></span>
+                      </span>
+                      <span>eSign Documents</span>
+                    </div>
+
+                    <div [ngClass]="{active: fundshow,done: funddone}"
+                      class="step-nav-item p-3 d-flex align-items-center flex-column">
+                      <span class="step-indicator mb-2">
+                        <span *ngIf="fundshow && !funddone" class="icon icon-24 icon-current"></span>
+                        <span *ngIf="!fundshow && !funddone" class="icon icon-24 icon-radio"></span>
+                        <span *ngIf="funddone" class="icon icon-24 icon-done"></span>
+                      </span>
+                      <span>Fund Investment</span>
+                    </div>
+                  </div>
+                </div>
+                <div *ngIf="DiligenceShow " class="mt-4">
+                  <h3 class="text-center">Investment Documents</h3>
+                  <div class="alert mt-3">
+                    <span class="pr-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" width="18px"
+                        fill="#c8202f">
+                        <path d="M0 0h24v24H0V0z" fill="none" />
+                        <path
+                          d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+                      </svg>
+                    </span>
+                    <span>It is your job as an investor and our future partner to do your due diligence. Please let our
+                      team know how we can help you.</span>
+                  </div>
+                  <div class="diligence mt-3" *ngFor="let doc of InvestmentData?.documents">
+                    <div class="d-flex align-items-center ">
+                      <span class="download pr-2"><svg xmlns="http://www.w3.org/2000/svg"
+                          enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px"
+                          fill="#2e2764">
+                          <g>
+                            <rect fill="none" height="24" width="24" />
+                            <g>
+                              <path
+                                d="M19,5v14H5V5H19 M19,3H5C3.9,3,3,3.9,3,5v14c0,1.1,0.9,2,2,2h14c1.1,0,2-0.9,2-2V5C21,3.9,20.1,3,19,3L19,3z" />
+                            </g>
+                            <path d="M14,17H7v-2h7V17z M17,13H7v-2h10V13z M17,9H7V7h10V9z" />
+                          </g>
+                        </svg></span>
+                      <span>{{doc.name}}</span>
+                    </div>
+
+                    <div class="d-flex align-items-center" style="cursor: pointer;">
+                      <span id="investment_download" class="pr-3"><svg xmlns="http://www.w3.org/2000/svg"
+                          enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px"
+                          fill="#2e2764" (click)="onDownloadFile(doc)" style="cursor: pointer;">
+                          <g>
+                            <rect fill="none" height="24" width="24" />
+                          </g>
+                          <g>
+                            <path
+                              d="M18,15v3H6v-3H4v3c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2v-3H18z M17,11l-1.41-1.41L13,12.17V4h-2v8.17L8.41,9.59L7,11l5,5 L17,11z" />
+                          </g>
+                        </svg></span>
+                      <app-view-document id="viewdetails_viewfile" [DocumentData]="doc"></app-view-document>
+                    </div>
+                  </div>
+                  <div class="field-group mt-3">
+                    <label for="investorTerms">
+                      <input type="checkbox" name="" id="investment_investorterms" [(ngModel)]="InvestorTerms"
+                        (change)="onInvestorTermsChanges($event)">
+                      <span class="ml-2">I confirm that I have reviewed all of the documents and have the necessary
+                        information to make this investment.</span>
+                    </label>
+                  </div>
+                  <div class="wizard-button text-center mt-4">
+                    <button id="investment_diligencenext" class="button-outline-secondary" (click)="DiligenceNext()"
+                      [disabled]="!InvestorTermsDisabled">Next</button>
+                  </div>
+                </div>
+
+                <div *ngIf="InvestShow">
+                  <h3 class="text-center">Invest</h3>
+                  <div class="">
+                    <div class="field-group">
+                      <div class="row mt-4">
+                        <div class="col">
+                          <label for="">Investing As</label>
+                          <select id="investment_investingas" [(ngModel)]="InvestingProfile"
+                            (click)="onChooseProfileChange($event)">
+                            <option *ngFor="let item of ProfileValue" [value]="item.id == 'null' ? '': item.id"
+                              [selected]="item.id == InvestingProfile">
+                              <span *ngIf="item.name != null">{{ item.name }}</span>
+                              <span *ngIf="item.firstName != null">{{ item.name }}</span>
+                              <span *ngIf="item.trustName != null">{{ item.name }}</span>
+                              <span *ngIf="item.retirementPlanName != null">{{ item.name }}</span>
+                            </option>
+                          </select>
+                          <div *ngIf="InvestError" class="validation-msg">
+                            <div *ngIf="InvestError">Selected Profile is required</div>
+                          </div>
+                        </div>
+                        <div class="col mt-3">
+                          <app-add-profile id="investment_addprofile" (messageEvent)="receiveMessage($event)"
+                            [ProfileValue]="Profile"></app-add-profile>
+                        </div>
+                      </div>
+                      <div class="row mt-4">
+                        <div class="col">
+                          <label for="investmentamount" class="">Investment Amount</label>
+                          <input id="investment_investmentamount" type="text" class="input-field"
+                            placeholder="Enter Amount Here" [(ngModel)]="InvestmentAmount" (keyup)="onInsAmt($event)">
+                          <div *ngIf="InsAmtError || MinimumError" class="validation-msg">
+                            <div *ngIf="InsAmtError">Investment Amount can not be zero</div>
+                            <div *ngIf="MinimumError">Your investment amount is less than the specified minimum</div>
+                          </div>
+                        </div>
+                        <div class="col mt-3">
+                          <h4 class="">Minimum Investment</h4>
+                          <div>{{MinInvestment | currency:'USD' : 'symbol' : '1.0-0'}}</div>
+                          <!-- <input type="text" class="input-field" [(ngModel)]="MinInvestment"> -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="d-flex justify-content-center mt-4">
+                    <button id="investment_investback1" class="button mr-3" (click)="InvestBack('1')">Back</button>
+                    <button id="investment_investnext" class="button-outline-secondary" (click)="InvestNext()"
+                      [disabled]="!InvestorTermsDisabled">Next</button>
+                  </div>
+                </div>
+                <div *ngIf="ESignShow">
+                  <h3 class="text-center">eSign Documents</h3>
+                  <div class="mt-5 mb-5">
+                    <label>
+                      <input id="investment_esigncheck" type="checkbox" (change)="EsigncheckValue($event)"
+                        [(ngModel)]="EsignCheck">
+                      <span class="ml-2">Click here to complete Esign.</span>
+                    </label>
+                  </div>
+                  <div>
+                    <div class="d-flex justify-content-center mt-4">
+                      <button id="investment_esignskip" class="button mr-3" (click)="EsignSkip()">Skip</button>
+                      <button id="investment_investback2" class="button mr-3" (click)="InvestBack('2')">Back</button>
+                      <button id="investment_esignnext" class="button-outline-secondary"
+                        (click)="EsignNext()">Next</button>
+                    </div>
+                  </div>
+                </div>
+                <div *ngIf="FundInvestmentShow">
+                  <h3 class="text-center">Funding Instructions</h3>
+
+                  <div class="mt-3 funding-panel ">
+                    <div *ngIf="FundingDataDetails != null">
+                      <h4 class="text-center pt-4"> Wire Transfer</h4>
+                      <!-- <div class="mt-4" *ngFor="let item of InvestmentTab.funds"> -->
+                      <div class="row funding-instruction">
+                        <div class="col">
+                          Amount to Fund :
+                        </div>
+                        <div class="col text-right">
+                          <p> <strong>{{InvestmentAmount}}</strong> </p>
+                        </div>
+                      </div>
+                      <div class="row funding-instruction">
+                        <div class="col">
+                          Receiving Bank :
+                        </div>
+                        <div class="col text-right">
+                          <p *ngIf="FundingDataDetails.receivingBank == null"> <strong> -</strong> </p>
+                          <p *ngIf="FundingDataDetails.receivingBank != null"> <strong>
+                              {{FundingDataDetails.receivingBank}}</strong> </p>
+                        </div>
+                      </div>
+                      <div class="row funding-instruction">
+                        <div class="col">
+                          Bank Address :
+                        </div>
+                        <div class="col text-right">
+                          <p *ngIf="FundingDataDetails.bankAddress == null"> <strong>-</strong> </p>
+                          <p *ngIf="FundingDataDetails.bankAddress != null">
+                            <strong>{{FundingDataDetails.bankAddress}}</strong> </p>
+                        </div>
+                      </div>
+
+                      <!-- <div class="row funding-instruction">
+                        <div class="col">
+                          Bank Address :
+                        </div>
+                        <div class="col text-right">
+                          <p> <strong>{{FundingDataDetails.bankAddress}}</strong> </p>
+                        </div>
+                      </div> -->
+
+
+
+
+                      <div class="row funding-instruction">
+                        <div class="col">
+                          Routing Number :
+                        </div>
+                        <div class="col text-right">
+                          <p *ngIf="FundingDataDetails.routingNumber == null"> <strong>-</strong> </p>
+                          <p *ngIf="FundingDataDetails.routingNumber != null">
+                            <strong>{{FundingDataDetails.routingNumber}}</strong> </p>
+                        </div>
+                      </div>
+
+                      <div class="row funding-instruction">
+                        <div class="col">
+                          Account Number :
+                        </div>
+                        <div class="col text-right">
+                          <p *ngIf="FundingDataDetails.accountNumber == null"> <strong>-</strong> </p>
+                          <p *ngIf="FundingDataDetails.accountNumber != null">
+                            <strong>{{FundingDataDetails.accountNumber}}</strong> </p>
+                        </div>
+                      </div>
+
+                      <div class="row funding-instruction">
+                        <div class="col">
+                          Account Type :
+                        </div>
+                        <div class="col text-right">
+                          <p *ngIf="FundingDataDetails.accountType == null"> <strong>-</strong> </p>
+                          <p *ngIf="FundingDataDetails.accountType == 1"> <strong>Checking</strong> </p>
+                          <p *ngIf="FundingDataDetails.accountType == 2"> <strong>Saving</strong> </p>
+                        </div>
+                      </div>
+
+                      <div class="row funding-instruction">
+                        <div class="col">
+                          Beneficiary Account Name :
+                        </div>
+                        <div class="col text-right">
+                          <p *ngIf="FundingDataDetails.beneficiary == null"> <strong>-</strong> </p>
+                          <p *ngIf="FundingDataDetails.beneficiary != null">
+                            <strong>{{FundingDataDetails.beneficiary}}</strong> </p>
+                        </div>
+                      </div>
+
+                      <div class="row funding-instruction">
+                        <div class="col">
+                          Beneficiary Address :
+                        </div>
+                        <div class="col text-right">
+                          <p *ngIf="FundingDataDetails.beneficiaryAddress == null"> <strong>-</strong> </p>
+                          <p *ngIf="FundingDataDetails.beneficiaryAddress != null">
+                            <strong>{{FundingDataDetails.beneficiaryAddress}}</strong> </p>
+                        </div>
+                      </div>
+
+
+                      <div class="row funding-instruction">
+                        <div class="col">
+                          Reference :
+                        </div>
+                        <div class="col text-right">
+                          <p *ngIf="FundingDataDetails.reference == null"> <strong>-</strong> </p>
+                          <p *ngIf="FundingDataDetails.reference != null">
+                            <strong>{{FundingDataDetails.reference}}</strong> </p>
+                        </div>
+                      </div>
+
+                      <div class="row funding-instruction">
+                        <div class="col">
+                          Other Instructions :
+                        </div>
+                        <div class="col text-right">
+                          <p *ngIf="FundingDataDetails.otherInstructions == null"> <strong>-</strong> </p>
+                          <p *ngIf="FundingDataDetails.otherInstructions != null">
+                            <strong>{{FundingDataDetails.otherInstructions}}</strong> </p>
+                        </div>
+                      </div>
+
+                      <!-- </div> -->
+                      <div *ngIf="FundingDataDetails.mailingAddress != null ||FundingDataDetails.checkBenificiary != null ||
+                    FundingDataDetails.memo != null || FundingDataDetails.checkOtherInstructions != null">
+                        <h4 class="text-center pt-4">By Check</h4>
+                        <div class="row funding-instruction">
+                          <div class="col">
+                            Mailing Address :
+                          </div>
+                          <div class="col text-right">
+                            <p> <strong>{{FundingDataDetails.mailingAddress}}</strong> </p>
+                          </div>
+                        </div>
+                        <div class="row funding-instruction">
+                          <div class="col">
+                            Beneficiary :
+                          </div>
+                          <div class="col text-right">
+                            <p> <strong>{{FundingDataDetails.checkBenificiary}}</strong> </p>
+                          </div>
+                        </div>
+                        <div class="row funding-instruction">
+                          <div class="col">
+                            Memo :
+                          </div>
+                          <div class="col text-right">
+                            <p> <strong>{{FundingDataDetails.memo}}</strong> </p>
+                          </div>
+                        </div>
+                        <div class="row funding-instruction">
+                          <div class="col">
+                            Other Instructions :
+                          </div>
+                          <div class="col text-right">
+                            <p> <strong>{{FundingDataDetails.checkOtherInstructions}}</strong> </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="mt-4">
+                    <label>When will you initiate your wire transfer?</label>
+                    <input id="investment_wiretransferdate" type="date" [(ngModel)]="WireTransferDate"
+                      class="input-field mt-2">
+                  </div>
+                  <div>
+                    <div class="d-flex justify-content-center mt-4">
+                      <!-- <button class="button mr-3" (click)="InvestBack('3')">Back</button> -->
+                      <button id="investment_fundsubmit" class="button-outline"
+                        (click)="onFundInvestmentSubmit()">Submit</button>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="loader" *ngIf="Loader">
+    <div class="dot-flashing"></div>
+  </div>

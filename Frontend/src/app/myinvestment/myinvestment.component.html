@@ -1,0 +1,608 @@
+<!-- Header Start -->
+<!-- <app-header></app-header> -->
+<!-- Header End -->
+
+
+  <!-- Sidebar Start -->
+  <!-- <app-side-bar></app-side-bar> -->
+  <!-- Sidebar End -->
+  <main>
+    <div class="m-4" *ngIf="InvestmentData != null">
+      <div class="tab-menu mb-4">
+        <div class="deal-content">
+          <div class="deal-highlight-content d-flex justify-content-between">
+            <div class="highlights pt-0 ">
+              <h3>{{HeaderData?.activeInvestments}}</h3>
+              <p>Active Investments </p>
+            </div>
+            <div class="highlights pt-0">
+              <h3>{{HeaderData?.totalInvested | currency:'USD' : 'symbol' : '1.0-0'}}</h3>
+              <p>Total Invested</p>
+            </div>
+            <div class="highlights pt-0">
+              <h3>{{HeaderData?.totalEarnings | currency:'USD' : 'symbol' : '1.0-0'}}</h3>
+              <p>Total Earnings</p>
+            </div>
+            <div class="highlights pt-0">
+              <h3>{{HeaderData?.totalReturn}}%</h3>
+              <p>Total Return</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-nav tab-menu pl-0 mb-4">
+        <div class="d-flex align-items-center justify-content-between">
+          <div class="nav-right">
+            <ul class="d-flex pl-0">
+              <li id="myinvestment_activeinvestment" class="nav-link" [ngClass]="{active: Selected == 'ActiveInvestment'}" (click)="ActiveInvest()">Active
+                Investments
+                <span class="bubble"
+                  [ngClass]="Selected == 'ActiveInvestment'? 'bubble' : 'bubble-inactive'">{{ActiveCount}}</span>
+              </li>
+              <li id="myinvestment_pendinginvestment" class="nav-link" [ngClass]="{active: Selected == 'PendingInvestment'}" (click)="PendingInvest()">
+                Pending Investments<span class="bubble"
+                  [ngClass]="Selected == 'PendingInvestment'? 'bubble' : 'bubble-inactive'">{{PendingCount}}</span></li>
+              <li id="myinvestment_pastinvestment" class="nav-link" [ngClass]="{active: Selected == 'PastInvestment'}" (click)="PastInvest()">Past
+                Investments
+                <span class="bubble"
+                  [ngClass]="Selected == 'PastInvestment'? 'bubble' : 'bubble-inactive'">{{PastCount}}</span>
+              </li>
+              <li id="myinvestment_reservations" class="nav-link" [ngClass]="{active: Selected == 'Reservation'}" (click)="Reservation()">
+                Reservations<span class="bubble"
+                  [ngClass]="Selected == 'Reservation'? 'bubble' : 'bubble-inactive'">{{ReserveCount}}</span></li>
+            </ul>
+          </div>
+          <div>
+            <button id="myinvestment_viewavalibleoffering" class=" button-outline mr-3" (click)="onViewAvalibleOfferings()">View Available Offerings</button>
+            <app-account-statement id="investor_accountstatement" [AccountStatementData]="AccountStatementDataValue"></app-account-statement>
+          </div>
+        </div>
+      </div>
+
+      <div class="marketplace-deal-wrapper">
+        <!-- <div #mapContainer id="map"></div> -->
+        <!-- <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom">
+          <agm-marker *ngFor="let marker of Markers" [latitude]="marker.position.lat"
+            [longitude]="marker.position.lng" [label]="marker.label">
+          </agm-marker>
+        </agm-map> -->
+        <!-- <div>
+          <agm-map [latitude]="51.678418" [longitude]="7.809007" [zoom]="zoom" [disableDefaultUI]="false"
+                   >
+            <agm-marker [latitude]="51.678418" [longitude]="7.809007"></agm-marker>
+          </agm-map>
+        </div> -->
+        <div class="row">
+          <div class="col-sm-12 p-0">
+            <div class="" *ngIf="ActiveShow">
+              <div *ngIf="ActiveInvestor.length == 0">No Active Investment...</div>
+              <div *ngIf="ActiveInvestor.length > 0">
+                <div class="card-content" *ngFor="let item of ActiveInvestor">
+                  <div class="row">
+                    <div class="col-auto card-image">
+                      <img src="{{item.offeringPictureUrl}}" alt="image-missing">
+                    </div>
+                    <div class="col deal-content">
+                      <div class="d-flex justify-content-between ">
+                        <div class="deal-header mr-2">
+                          <h3>{{item.offeringName}}</h3>
+                          <p>{{item.offeringEntityName}}</p>
+                        </div>
+                        <div class="deal-sub-header d-flex">
+                          <p class="request-date" *ngIf="item.status == 1">Approved</p>
+                          <p class="request-date" *ngIf="item.status == 2">Pending Reservation</p>
+                          <p class="request-date" *ngIf="item.status == 3">Pending Investor Signature and Funding</p>
+                          <p class="request-date" *ngIf="item.status == 4">Pending Funding</p>
+                          <p class="request-date" *ngIf="item.status == 10">Pending Reservation</p>
+                          <p class="request-date ml-3"> <strong> {{item.approvedOn | date}} </strong><br> <span
+                              class="color-grey">Funded</span> </p>
+                        </div>
+                      </div>
+                      <div class="deal-highlight-content d-flex mt-3 justify-content-between">
+                        <div class="highlights">
+                          <div>
+                            <td *ngIf="item.userProfile.name != null">
+                              <h3>{{item.userProfile.name}}</h3>
+                            </td>
+                            <td *ngIf="item.userProfile.firstName != null">
+                              <h3>{{item.userProfile.firstName}} {{item.userProfile.lastName}}</h3>
+                            </td>
+                            <td *ngIf="item.userProfile.trustName != null">
+                              <h3>{{item.userProfile.trustName}}</h3>
+                            </td>
+                            <td *ngIf="item.userProfile.retirementPlanName != null">
+                              <h3>{{item.userProfile.retirementPlanName}}</h3>
+                            </td>
+                            <p>Profile</p>
+                          </div>
+                        </div>
+                        <div class="highlights">
+                          <td>
+                            <h3 *ngIf="item.fundedDate == null">-</h3>
+                            <h3 *ngIf="item.fundedDate != null">{{item.fundedDate | date}}</h3>
+                            <P>Funded Date</P>
+                          </td>
+                        </div>
+                        <div class="highlights">
+                          <td>
+                            <h3>{{item.amount | currency:'USD' : 'symbol' : '1.0-0'}}</h3>
+                            <P>Amount Invested</P>
+                          </td>
+                        </div>
+                        <div class="highlights">
+                          <td>
+                            <h3>{{item.totalEarnings | currency:'USD' : 'symbol' : '1.0-0'}}</h3>
+                            <P>Total Return</P>
+                          </td>
+                        </div>
+                        <div class="highlights" *ngFor="let key of item.keyHighlights">
+                          <div *ngIf="key.visibility == true">
+                            <div *ngIf="key.name == 'Target IRR' || key.name == 'Term' || key.name == 'Type'">
+                              <h3>{{key.value}}</h3>
+                              <p>{{key.name}}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="card-footer d-flex justify-content-between mt-5">
+                        <div>
+                          <!-- <button id="myinvestment_activeviewdetails" class="button-outline mr-3" (click)="onViewDetails(item)">View Details</button> -->
+                          <app-view-details id="myinvestment_activeviewdetails" [ViewDetailData]="item.offeringId"></app-view-details>
+                          <button id="myinvestment_activeviewupdates" class="button mr-3" (click)="onViewUpdates(item)">View Updates</button>
+                          <button id="myinvestment_activedistributionhistory" class="button">Distribution History</button>
+                        </div>
+                        <div class="location">
+                          <div class="tooltip-wrapper tooltip-lg">
+                            <div class="tooltip-toggle icon-only clickable">
+                              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"
+                                fill="#c8202f">
+                                <path d="M0 0h24v24H0z" fill="none" />
+                                <path
+                                  d="M12 12c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm6-1.8C18 6.57 15.35 4 12 4s-6 2.57-6 6.2c0 2.34 1.95 5.44 6 9.14 4.05-3.7 6-6.8 6-9.14zM12 2c4.2 0 8 3.22 8 8.2 0 3.32-2.67 7.25-8 11.8-5.33-4.55-8-8.48-8-11.8C4 5.22 7.8 2 12 2z" />
+                              </svg>
+                            </div>
+                            <div class="tooltip-text">
+                              2519 Co Rd 323, Liberty Hill, TX 78642, USA
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="" *ngIf="PendingShow">
+              <div *ngIf="PendingInvestor.length == 0">No Pending Investor...</div>
+              <div *ngIf="PendingInvestor.length > 0">
+                <div class="card-content" *ngFor="let item of PendingInvestor">
+                  <div class="row">
+                    <div class="col-auto card-image">
+                      <img src="{{item.offeringPictureUrl}}" alt="image-missing">
+                    </div>
+                    <div class="col deal-content">
+                      <div class="d-flex justify-content-between ">
+                        <div class="deal-header mr-2">
+                          <h3>{{item.offeringName}}</h3>
+                          <p>{{item.offeringEntityName}}</p>
+                        </div>
+                        <div class="deal-sub-header d-flex">
+                          <p class="request-date" *ngIf="item.status == 1">Approved</p>
+                          <p class="request-date" *ngIf="item.status == 2">Pending Reservation</p>
+                          <p class="request-date" *ngIf="item.status == 3">Pending Investor Signature and Funding</p>
+                          <p class="request-date" *ngIf="item.status == 4">Pending Funding</p>
+                          <p class="request-date" *ngIf="item.status == 10">Pending Reservation</p>
+                          <p class="request-date ml-3"> <strong> {{item.createdOn | date}} </strong><br> <span
+                              class="color-grey">Investment Request Date</span> </p>
+                        </div>
+                      </div>
+                      <div class="deal-highlight-content d-flex mt-3 justify-content-between">
+                        <div class="highlights">
+                          <td *ngIf="item.userProfile.name != null">
+                            <h3>{{item.userProfile.name}}</h3>
+                          </td>
+                          <td *ngIf="item.userProfile.firstName != null">
+                            <h3>{{item.userProfile.firstName}} {{item.userProfile.lastName}}</h3>
+                          </td>
+                          <td *ngIf="item.userProfile.trustName != null">
+                            <h3>{{item.userProfile.trustName}}</h3>
+                          </td>
+                          <td *ngIf="item.userProfile.retirementPlanName != null">
+                            <h3>{{item.userProfile.retirementPlanName}}</h3>
+                          </td>
+                          <p>Profile</p>
+                        </div>
+                        <div class="highlights" *ngFor="let key of item.keyHighlights">
+                          <div *ngIf="key.visibility == true">
+                            <h3 *ngIf="key.name == 'Offering Size' || key.name == 'Minimum Investment'">{{key.value |
+                              currency:'USD' : 'symbol' : '1.0-0'}}</h3>
+                            <h3 *ngIf="key.name != 'Offering Size' && key.name != 'Minimum Investment'">{{key.value}}
+                            </h3>
+                            <p>{{key.name}}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="card-footer d-flex justify-content-between mt-5">
+                        <div>
+                          <!-- <button id="myinvestment_pendingviewdetails" class="button-outline" (click)="onViewDetails(item)">View Details</button> -->
+                          <app-view-details id="myinvestment_pendingviewdetails" [ViewDetailData]="item.offeringId"></app-view-details>
+                          <button id="myinvestment_pendingfundinginstructions" class="button ml-3" *ngIf="item.wireTransferDate == null"
+                            (click)="onFundingInstruction(item)">Funding Instructions</button>
+                          <button id="myinvestment_pendingcompleteesign" class="button ml-3" *ngIf="!item.iseSignCompleted"
+                            (click)="onCompleteEsign(item)">Complete eSign</button>
+                        </div>
+                        <div class="location">
+                          <div class="tooltip-wrapper tooltip-lg">
+                            <div class="tooltip-toggle icon-only clickable">
+                              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"
+                                fill="#c8202f">
+                                <path d="M0 0h24v24H0z" fill="none" />
+                                <path
+                                  d="M12 12c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm6-1.8C18 6.57 15.35 4 12 4s-6 2.57-6 6.2c0 2.34 1.95 5.44 6 9.14 4.05-3.7 6-6.8 6-9.14zM12 2c4.2 0 8 3.22 8 8.2 0 3.32-2.67 7.25-8 11.8-5.33-4.55-8-8.48-8-11.8C4 5.22 7.8 2 12 2z" />
+                              </svg>
+                            </div>
+                            <div class="tooltip-text">
+                              2519 Co Rd 323, Liberty Hill, TX 78642, USA
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="" *ngIf="PastShow">
+              <div *ngIf="PastInvestor.length == 0">No Past investment...</div>
+              <div *ngIf="PastInvestor.length > 0">
+                <div class="card-content" *ngFor="let item of PastInvestor">
+                  <div class="row">
+                    <div class="col-auto card-image">
+                      <img src="{{item.offeringPictureUrl}}" alt="image-missing">
+                    </div>
+                    <div class="col deal-content">
+                      <div class="deal-header">
+                        <h3>{{item.offeringName}}</h3>
+                        <p>{{item.offeringEntityName}}</p>
+                      </div>
+                      <div class="deal-highlight-content d-flex mt-3 justify-content-between">
+                        <div class="highlights">
+                          <td *ngIf="item.userProfile.name != null">
+                            <h3>{{item.userProfile.name}}</h3>
+                          </td>
+                          <td *ngIf="item.userProfile.firstName != null">
+                            <h3>{{item.userProfile.firstName}} {{item.userProfile.lastName}}</h3>
+                          </td>
+                          <td *ngIf="item.userProfile.trustName != null">
+                            <h3>{{item.userProfile.trustName}}</h3>
+                          </td>
+                          <td *ngIf="item.userProfile.retirementPlanName != null">
+                            <h3>{{item.userProfile.retirementPlanName}}</h3>
+                          </td>
+                          <p>Profile</p>
+                        </div>
+                        <div class="highlights" *ngFor="let key of item.keyHighlights">
+                          <div *ngIf="key.visibility == true">
+                            <h3 *ngIf="key.name == 'Offering Size' || key.name == 'Minimum Investment'">{{key.value |
+                              currency:'USD' : 'symbol' : '1.0-0'}}</h3>
+                            <h3 *ngIf="key.name != 'Offering Size' && key.name != 'Minimum Investment'">{{key.value}}
+                            </h3>
+                            <p>{{key.name}}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="card-footer d-flex justify-content-between mt-5">
+                        <!-- <button id="myinvestment_pastviewdetails" class="button-outline" (click)="onViewDetails(item)">View Details</button> -->
+                        <app-view-details id="myinvestment_pastviewdetails" [ViewDetailData]="item.offeringId"></app-view-details>
+                        <div class="location">
+                          <div class="tooltip-wrapper tooltip-lg">
+                            <div class="tooltip-toggle icon-only clickable">
+                              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"
+                                fill="#c8202f">
+                                <path d="M0 0h24v24H0z" fill="none" />
+                                <path
+                                  d="M12 12c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm6-1.8C18 6.57 15.35 4 12 4s-6 2.57-6 6.2c0 2.34 1.95 5.44 6 9.14 4.05-3.7 6-6.8 6-9.14zM12 2c4.2 0 8 3.22 8 8.2 0 3.32-2.67 7.25-8 11.8-5.33-4.55-8-8.48-8-11.8C4 5.22 7.8 2 12 2z" />
+                              </svg>
+                            </div>
+                            <div class="tooltip-text">
+                              2519 Co Rd 323, Liberty Hill, TX 78642, USA
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="" *ngIf="ResShow">
+              <div *ngIf="ReservationInvestor.length == 0">No Reservations...</div>
+              <div *ngIf="ReservationInvestor.length > 0">
+                <div class="card-content" *ngFor="let item of ReservationInvestor">
+                  <div class="row ">
+                    <div class="col-auto card-image">
+                      <img src="{{item.offeringPictureUrl}}" alt="image-missing">
+                    </div>
+                    <div class="col deal-content">
+                      <div class="d-flex justify-content-between">
+                        <div class="deal-header">
+                          <h3>{{item.offeringName}}</h3>
+                          <p>{{item.offeringEntityName}}</p>
+                        </div>
+                        <div class="deal-sub-header d-flex">
+                          <p class="request-date ml-3"> <strong> {{item.createdOn | date}} </strong><br> <span
+                              class="color-grey">Request Date</span> </p>
+                        </div>
+                      </div>
+                      <div class="d-flex mt-3 ">
+                        <div class="highlights">
+                          <td *ngIf="item.userProfile.name != null">
+                            <h3>{{item.userProfile.name}}</h3>
+                          </td>
+                          <td *ngIf="item.userProfile.firstName != null">
+                            <h3>{{item.userProfile.firstName}} {{item.userProfile.lastName}}</h3>
+                          </td>
+                          <td *ngIf="item.userProfile.trustName != null">
+                            <h3>{{item.userProfile.trustName}}</h3>
+                          </td>
+                          <td *ngIf="item.userProfile.retirementPlanName != null">
+                            <h3>{{item.userProfile.retirementPlanName}}</h3>
+                          </td>
+                          <p>Profile</p>
+                        </div>
+                        <div class="highlights">
+                          <h3>{{item.amount | currency:'USD' : 'symbol' : '1.0-0'}}</h3>
+                          <p>Reservation Amount</p>
+                        </div>
+                      </div>
+                      <div class="card-footer d-flex justify-content-between mt-5">
+                        <div>
+                          <!-- <button id="myinvestment_reservationviewdetails" class="button-outline mr-3" (click)="onViewDetails(item)">View Details</button> -->
+                          <app-view-details id="myinvestment_reservationviewdetails" [ViewDetailData]="item.offeringId"></app-view-details>
+                          <button id="myinvestment_reservationedit" class="button" (click)="onEditReservation(item)">Edit Reservation</button>
+                        </div>
+                        <div class="location">
+                          <div class="tooltip-wrapper tooltip-lg">
+                            <div class="tooltip-toggle icon-only clickable">
+                              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"
+                                fill="#c8202f">
+                                <path d="M0 0h24v24H0z" fill="none" />
+                                <path
+                                  d="M12 12c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm6-1.8C18 6.57 15.35 4 12 4s-6 2.57-6 6.2c0 2.34 1.95 5.44 6 9.14 4.05-3.7 6-6.8 6-9.14zM12 2c4.2 0 8 3.22 8 8.2 0 3.32-2.67 7.25-8 11.8-5.33-4.55-8-8.48-8-11.8C4 5.22 7.8 2 12 2z" />
+                              </svg>
+                            </div>
+                            <div class="tooltip-text">
+                              2519 Co Rd 323, Liberty Hill, TX 78642, USA
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-wrapper" *ngIf="ViewDetails">
+      <div class="modal" style="max-width: 1100px;">
+        <div class="modal-title pb-0">
+          <div class="company-wrapper d-flex align-items-center justify-content-between">
+            <div>
+              <h3 class="">{{ViewDetailsDataValue.offeringName}}</h3>
+            </div>
+            <div>
+              <button id="myinvestment_viewdetails_x" class="button icon-only button-clear ml-2" (click)="CloseViewDetails(ViewDetailsDataValue)">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                  <path d="M0 0h24v24H0V0z" fill="none" />
+                  <path
+                    d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-content px-4">
+          <div class="deal-details d-flex mb-5">
+            <div class="deal-details-card-image">
+              <!-- <img src="assets/images/deal-image1.png" alt="" width=""> -->
+              <img src={{ViewDetailsDataValue.offeringPictureUrl}} alt="">
+            </div>
+            <div class="deal-details-card">
+              <div class="deal-highlight-content d-flex">
+                <div class="highlights" *ngFor="let key of ViewDetailsDataValue.keyHighlights">
+                  <div *ngIf="key.visibility == true">
+                    <h3 *ngIf="key.name == 'Offering Size' || key.name == 'Minimum Investment'">{{key.value |
+                      currency:'USD' : 'symbol' : '1.0-0'}}</h3>
+                    <h3 *ngIf="key.name != 'Offering Size' && key.name != 'Minimum Investment'">{{key.value}}
+                    </h3>
+                    <p>{{key.name}}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer mt-4">
+                <!-- <button *ngIf="ViewDetailsDataValue.active == true && ViewDetailsDataValue.isReservation == false"
+                  class="button-outline-secondary w-100" [disabled]="InvestDisabled"
+                  (click)="onInvestNow(ViewDetailsDataValue)">Invest
+                  now</button> -->
+              </div>
+            </div>
+          </div>
+
+          <div class="deal-summary-wrapper">
+            <div class="header-nav summary-tab-menu pl-0 mb-4 d-flex align-items-center justify-content-between">
+              <div class="nav-right">
+                <ul class="d-flex pl-0">
+                  <li id="myinvestment_viewdetails_summary" class="summary-nav-link active" [ngClass]="{active: Selected == 'Summary'}"
+                    (click)="selectSummary()">
+                    Summary</li>
+                  <li id="myinvestment_viewdetails_documents" class="summary-nav-link active" [ngClass]="{active: Selected == 'Documents'}"
+                    (click)="selectDocument()">
+                    Documents</li>
+                  <li id="myinvestment_viewdetails_location" class="summary-nav-link active" [ngClass]="{active: Selected == 'Location'}"
+                    (click)="selectLocation()">
+                    Location</li>
+                  <li id="myinvestment_viewdetails_update" class="summary-nav-link active" [ngClass]="{active: Selected == 'Update'}"
+                    (click)="selectUpdate()">
+                    Update</li>
+                </ul>
+              </div>
+            </div>
+            <div class="deal-summary-content" *ngIf="summaryBool">
+              <div class="summery-texts" *ngFor="let sum of ViewDetailsSummaryValue">
+                <ckeditor [editor]="Editor" data="{{sum.summary}}" [(ngModel)]="sum.summary" [disabled]="Ckbool">
+                </ckeditor>
+              </div>
+            </div>
+            <div class="deal-summary-content d-flex justify-content-center" *ngIf="documentBool">
+              <div class="text-center" *ngFor="let doc of ViewDetailsDocValue">
+                <div class="documents-wrapper m-3">
+                  <img src="../../assets/images/icons/pdf.png" alt="" width="48" height="48" *ngIf="doc.type == 'pdf'">
+                  <img src="../../assets/images/icons/word.png" alt="" width="48" height="48"
+                    *ngIf="doc.type == 'word'  || doc.type == 'Docx'">
+                  <img src="../../assets/images/icons/xls.png" alt="" width="48" height="48" *ngIf="doc.type == 'xlxx'">
+                  <img src="../../assets/images/icons/ppt.png" alt="" width="48" height="48" *ngIf="doc.type == 'pptx'">
+                  <div class="preview-file-name">{{doc.name}}</div>
+                </div>
+              </div>
+            </div>
+            <div class="deal-summary-content" *ngIf="locationBool">
+              <div class="text-center" *ngFor="let loc of ViewDetailsLocationValue">
+                <p>{{loc.location}}</p>
+              </div>
+              <!-- <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom">
+                <agm-marker *ngFor="let marker of Markers" [latitude]="marker.position.lat"
+                  [longitude]="marker.position.lng" [label]="marker.label">
+                </agm-marker>
+              </agm-map> -->
+              <!-- <div>
+                <agm-map [latitude]="51.678418" [longitude]="7.809007" [zoom]="zoom" [disableDefaultUI]="false"
+                         >
+                  <agm-marker [latitude]="51.678418" [longitude]="7.809007"></agm-marker>
+                </agm-map>
+              </div> -->
+            </div>
+            <div class="deal-summary-content" *ngIf="updatenBool">
+              <div class="text-center" *ngFor="let loc of ViewDetailsUpdateValue">
+                <ckeditor [editor]="Editor" data="{{loc.content}}" [(ngModel)]="loc.content" [disabled]="Ckbool">
+                </ckeditor>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <div class="modal-wrapper" *ngIf="EditReservationPopup">
+    <div class="modal" style="max-width: 650px;">
+      <div class="modal-title pb-0">
+        <div class="company-wrapper d-flex align-items-center justify-content-between">
+          <h3>Edit Reservation</h3>
+          <button id="myinvestment_editreservepop_x" class="button icon-only button-clear ml-2" (click)="EditReservationPopup = false">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+              <path d="M0 0h24v24H0V0z" fill="none" />
+              <path
+                d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="modal-content" style="max-height: 400px;overflow:auto;">
+        <div class="">
+          <div class="field-group">
+            <div class="row mt-4">
+              <div class="col">
+                <label for="">Investing As</label>
+                <select id="myinvestment_editreservepop_investingas" [(ngModel)]="InvestingProfile" (click)="onChooseProfileChange($event)">
+                  <option *ngFor="let item of ProfileValue" [value]="item.id == 'null' ? '': item.id"
+                    [selected]="item.id == InvestingProfile">
+                    <span *ngIf="item.name != null">{{ item.name }}</span>
+                    <span *ngIf="item.firstName != null">{{ item.name }}</span>
+                    <span *ngIf="item.trustName != null">{{ item.name }}</span>
+                    <span *ngIf="item.retirementPlanName != null">{{ item.name }}</span>
+                  </option>
+                </select>
+                <div *ngIf="InvestError" class="validation-msg">
+                  <div *ngIf="InvestError">Selected Profile is required</div>
+                </div>
+              </div>
+              <div class="col mt-3">
+                <!-- <button type="button" class="button-outline" (click)="onAddNewProfile()">Add New Profile</button> -->
+                <app-add-profile id="myinvestment_editreservepop_addprofile" (messageEvent)="receiveMessage($event)" [ProfileValue]="Profile"></app-add-profile>
+              </div>
+            </div>
+            <div class="row mt-4">
+              <div class="col">
+                <label for="investmentamount" class="">Investment Amount</label>
+                <input id="myinvestment_editreservepop_investmentamount" type="text" class="input-field" placeholder="Enter Amount Here" [(ngModel)]="InvestmentAmount"
+                  (blur)="onInsAmt($event)">
+                <div *ngIf="InsAmtError || MinimumError" class="validation-msg">
+                  <div *ngIf="InsAmtError">Invested Amount is required</div>
+                  <div *ngIf="MinimumError">Investment Amount is greater than reservation size</div>
+                </div>
+              </div>
+              <div class="col mt-3">
+                <h4 class="">Minimum Investment</h4>
+                <div>{{MinInvestment}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class=" modal-footer text-center mt-5">
+        <button id="myinvestment_editreservepop_withdraw" class="button mr-3" (click)="onReserve('withdraw')">Withdraw</button>
+        <button id="myinvestment_editreservepop_update" class="button-outline-secondary mr-3" (click)="onReserve('update')">Update</button>
+      </div>
+    </div>
+  </div>
+  <div class="modal-wrapper" *ngIf="ViewUpdatePopup">
+    <div class="modal" style="max-width: 750px;">
+      <div class="modal-title pb-0">
+        <div class="company-wrapper d-flex align-items-center justify-content-between">
+          <h3>{{UpdateValue[0].name}} - Updates</h3>
+          <button id="myinvestment_vup_x" class="button icon-only button-clear ml-2" (click)="ViewUpdatePopup = false">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+              <path d="M0 0h24v24H0V0z" fill="none" />
+              <path
+                d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="modal-content" style="max-height: 400px;overflow:auto;">
+        <div class="">
+          <div class="field-group">
+            <div *ngIf="UpdateValue.length != 0">
+              <table class="documents-table mt-3">
+                <thead>
+                  <tr>
+                    <th scope="col">Subject</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of UpdateValue">
+                    <td>{{item.subject}}</td>
+                    <td>{{item.createdOn | date}}</td>
+                    <td>
+                      <app-view-updates id="myinvestment_vup_view{{item.id}}" [UpdateData]="item.id"></app-view-updates>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<div class="loader" *ngIf="Loader">
+  <div class="dot-flashing"></div>
+</div>
